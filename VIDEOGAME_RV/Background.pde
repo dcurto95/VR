@@ -30,16 +30,3 @@ class Background{
 
 
 }//endClass
-
-
-
-
-
-
-
-
-
-
-
-
-}
