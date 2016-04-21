@@ -7,15 +7,9 @@ final int GAME_MENU = 1;
 final int GAME = 2;
 final int OPTIONS = 3;
 final int ENDGAME = 4;
-Button play,options,exit,nobutton,home;
-
+Button play,options,exit,home;
 Net net;
-
 ControlP5 cp5;
-
-int c1,c2;
-int myColor = color(255);
-float n,n1;
 
 void setup() {
 size(800,600);
@@ -25,10 +19,9 @@ setButtons();
 }
 
 
-
 void draw() {
-  background(myColor);
-   
+  background(255,255,255);
+  
    switch(state) {
       case VIDEO_INICIAL:
           //HISTORIA Y VIDEO INICIAL
@@ -40,27 +33,26 @@ void draw() {
          options.show();
          exit.show();
          home.hide();
-    break;
-    case GAME:
-      //Escondemos botones
-      play.hide();
-      options.hide();
-      exit.hide();
-      home.show();
-      println("Game");
-      //MOSTRAMOS EL JUEGO
-      background(255);
-      net.drawNet();
-    break;    
-    case OPTIONS:
-      println("Options");
-      background(40);
-    break;
-    case ENDGAME:
-      println("Exit");
-      exit();
-    break;
-    
+      break;
+      case GAME:
+        //Escondemos botones
+        play.hide();
+        options.hide();
+        exit.hide();
+        home.show();
+        println("Game");
+        //MOSTRAMOS EL JUEGO
+        background(255);
+        net.drawNet();
+      break;    
+      case OPTIONS:
+        println("Options");
+        background(40);
+      break;
+      case ENDGAME:
+        println("Exit");
+        exit();
+      break;  
   }  
 }
 
@@ -69,6 +61,8 @@ void draw() {
 public void PLAY(int theValue){
   state = 2;
 }
+//Cuando se haga click en el button con el nombre Options se ejecutara la funcion Options()
+
 public void Options(int theValue){
 
   state = 3;
@@ -82,6 +76,7 @@ public void Home(int theValue){
   state = 1;
 }
 
+//Creamos los botones e inicializamos las caracteristicas
 void setButtons(){
   cp5 = new ControlP5(this);
   /*SET PLAY BUTTON*/
@@ -110,9 +105,7 @@ void setButtons(){
      .updateSize()
      .hide()
      ;
-  nobutton = cp5.addButton("Null")
-    .setPosition(-100,250);
-    // .setSize(200,19);
+ 
   
 
 }
