@@ -18,6 +18,8 @@ class Spider{
     PVector pos = new PVector(0.0,0.0);
     pos = web.getPosition(position);
     pushMatrix();
+    stroke(0);
+    strokeWeight(1);
     translate(width/2, height/2);
     fill(255,0,0);
     ellipse((int)pos.x, (int)pos.y, 50, 50);    

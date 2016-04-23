@@ -6,7 +6,7 @@ public class Net {
   //Constructor
   public Net(int nRings) {
     this.nRings = nRings;
-    radius = 120;
+    radius = 100;
     net = new ArrayList<ArrayList<Point>>();
     for (int i=0; i<=nRings; i++) {
       net.add(new ArrayList<Point>());
@@ -45,7 +45,7 @@ public class Net {
 
           pushMatrix();
           translate(width/2, height/2);
-          fill(0);
+          fill(255);
           ellipse(p.position.x, p.position.y, 10, 10);
           popMatrix();
           Point pPrev = null;
@@ -63,8 +63,9 @@ public class Net {
 
           pushMatrix();
           translate(width/2, height/2);
-          fill(0);
-          stroke(0);
+          fill(255);
+          stroke(255);
+          strokeWeight(3);
           if (pPrev != null && pPrev.type=='E') line(pPrev.position.x, pPrev.position.y, p.position.x, p.position.y);
           if (pCont.type=='E') line(pCont.position.x, pCont.position.y, p.position.x, p.position.y);
           popMatrix();

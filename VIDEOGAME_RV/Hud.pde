@@ -134,9 +134,6 @@ class Hud {
     fill(0);
     textSize(40);
     text(nf((seconds/60 % 60), 2) + ":" + nf((seconds % 60), 2), W/2 - 60, (W/16) + 20); 
-    //time.setValue(seconds);
   }
-  
-  
-  
+   
 }//endClass

@@ -10,7 +10,7 @@ Spider spider;
 void setup(){
   //size(1024,768);
   fullScreen(); 
-  web = new Net(4);
+  web = new Net(8);
   spider = new Spider(web);
   hud = new Hud(this);
   background = new Background();
@@ -20,7 +20,7 @@ void setup(){
 //Draw function
 void draw(){
   background(255);
-  //background.display(); //Displays background images
+  background.display(); //Displays background images
   web.drawNet(); //Display spider net
   hud.display(); //Display hud info
   spider.display();
