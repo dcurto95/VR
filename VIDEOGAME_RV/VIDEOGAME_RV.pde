@@ -2,14 +2,16 @@
 import controlP5.*;
 
 //Variables
-Net net;
+Net web;
 Hud hud;
 Background background;
+Spider spider;
 
 void setup(){
-  size(1024,768);
-  //fullScreen(); 
-  net = new Net(4);
+  //size(1024,768);
+  fullScreen(); 
+  web = new Net(4);
+  spider = new Spider(web);
   hud = new Hud(this);
   background = new Background();
 }
@@ -18,9 +20,10 @@ void setup(){
 //Draw function
 void draw(){
   background(255);
-  background.display(); //Displays background images
-  net.drawNet(); //Display spider net
+  //background.display(); //Displays background images
+  web.drawNet(); //Display spider net
   hud.display(); //Display hud info
+  spider.display();
 }
 
 
@@ -38,4 +41,8 @@ void keyPressed() {
   if(key == 'r') hud.resetTimer();
   if(key == 's') hud.substractLifeSpider();
   if(key == 'b') hud.substractLifeBoy();
+  if(keyCode == UP) spider.moveSpider(1);
+  if(keyCode == RIGHT) spider.moveSpider(2);
+  if(keyCode == DOWN) spider.moveSpider(3);
+  if(keyCode == LEFT) spider.moveSpider(4);
 }

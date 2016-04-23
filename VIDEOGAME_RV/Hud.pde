@@ -4,8 +4,8 @@ class Hud {
   final int COUNT_DOWN_TIME = 120; //in seconds 
   final int INITIAL_LIFE = 10; //in seconds 
   final int MAX_LIFES = 10; //in seconds 
-  final int W = width;
-  final int H = height;
+  final int W = displayWidth;
+  final int H = displayHeight;
 
   //Game variables
   int lifesSpider;
@@ -31,11 +31,11 @@ class Hud {
 
     //Load HUD image
     hudImage =loadImage("images/hud.png");
-    hudImage.resize(W, H);
+    hudImage.resize(displayWidth, displayHeight);
 
     //Configuration all sliders and knobs
     cp5 = new ControlP5(thePApplet);  
-    sliderBoy = cp5.addSlider("SBLIFE")
+    /*sliderBoy = cp5.addSlider("SBLIFE")
       .setPosition(W-(W-115), H-(H-62))
       .setSize(130, 10)
       .setRange(1, MAX_LIFES)
@@ -65,7 +65,7 @@ class Hud {
       .setDragDirection(Knob.VERTICAL)
       .setColorBackground(color(0, 0, 0))
       .setColorForeground(color(255, 255, 255))
-      .lock();
+      .lock();*/
   }
 
   void run() {
@@ -91,10 +91,10 @@ class Hud {
   void updateScores() {
     fill(255);      
     textSize(50);
-    text(nf(lifesBoy, 2), (W - (W - 35)), 100); 
-    text(nf(lifesSpider, 2), (W - 100), 100);
-    sliderBoy.setValue(lifesBoy);
-    sliderSpider.setValue(MAX_LIFES- lifesSpider);
+    //text(nf(lifesBoy, 2), floor(W/16), (W/16) + 50); 
+    text(nf(lifesBoy, 2), 410, 125); 
+    //text(nf(lifesSpider, 2), floor(15*W/16), (W/16) + 50);
+    text(nf(lifesSpider, 2), 1205, 125);
   }
 
 
@@ -131,9 +131,10 @@ class Hud {
     } else {
       seconds = COUNT_DOWN_TIME;
     }
-    textSize(25);
-    text(nf((seconds/60 % 60), 2) + ":" + nf((seconds % 60), 2), W/2 - 40, 160); 
-    time.setValue(seconds);
+    fill(0);
+    textSize(40);
+    text(nf((seconds/60 % 60), 2) + ":" + nf((seconds % 60), 2), W/2 - 60, (W/16) + 20); 
+    //time.setValue(seconds);
   }
   
   
