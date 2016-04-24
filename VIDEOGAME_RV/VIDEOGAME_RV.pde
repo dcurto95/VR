@@ -19,11 +19,11 @@ void setup(){
 
 //Draw function
 void draw(){
-  background(255);
-  background.display(); //Displays background images
-  web.drawNet(); //Display spider net
-  hud.display(); //Display hud info
-  spider.display();
+  background(0);
+  background.display();   //Displays background images
+  web.drawNet();          //Display spider net
+  hud.display();          //Display hud info
+  spider.display();       //Display spider character animated
 }
 
 
@@ -38,7 +38,7 @@ void mouseClicked() {
 //Key control (variable key always returns the ASCI number of the pressed key, i think)
 void keyPressed() {
   print("info: KEY PRESSED ( key = " + key + " )\n");
-  if(key == 'r') hud.resetTimer();
+  if(key == 'r') hud.resetAll();
   if(key == 's') hud.substractLifeSpider();
   if(key == 'b') hud.substractLifeBoy();
   if(keyCode == UP) spider.moveSpider(1);
