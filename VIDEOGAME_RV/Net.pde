@@ -26,6 +26,12 @@ public class Net{
         }
     }
   }
+  boolean isShortcut(int xIndex, int yIndex) {
+     return (net.get(xIndex).get(yIndex).type=='S');
+  }
+  PVector getShortcutDestIndexes(int xIndex, int yIndex){
+    return net.get(xIndex).get(yIndex).position.copy();
+  }
   
   Point getNetPoint(int xIndex, int yIndex){
     int x,y;

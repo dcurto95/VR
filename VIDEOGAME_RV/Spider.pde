@@ -8,7 +8,7 @@ public class Spider{
 
   public PVector screenDestination;
   public PVector screenPosition;
-  private int angle = 0;
+  private float angle = 0;
   
   private float angleInScreen;
   public boolean isMoving;
@@ -29,11 +29,14 @@ public class Spider{
     if(!isMoving){
       println("lf");
       
-      angle = angle + 90;
-      direction = new PVector(sin(radians(angle)), cos(radians(angle)));
+      angle = angle + PI/2;//90;
+      direction = new PVector(sin(/*radians(*/angle/*)*/), cos(/*radians(*/angle/*)*/));
+      println(direction);
       /*if(net.get(position.x).get(position.y).type == 'D' ){
         turnRight();
       }*/
+      if(abs(direction.x)<0.1) direction.x=0;
+      if(abs(direction.y)<0.1) direction.y=0;
     }
   }
   
@@ -41,11 +44,14 @@ public class Spider{
     if(!isMoving){
       println("righ");
       
-      angle = angle - 90;
-      direction = new PVector(sin(radians(angle)), cos(radians(angle)));
+      angle = angle - PI/2;//90;
+      direction = new PVector(sin(/*radians(*/angle/*)*/), cos(/*radians(*/angle/*)*/));
     /*if(net.get(position.x).get(position.y).type == 'D' ){
       turnLeftt();
     }*/
+    if(abs(direction.x)<0.1) direction.x=0;
+    if(abs(direction.y)<0.1) direction.y=0;
+    println(direction);
     }
   }
   
@@ -82,9 +88,15 @@ public class Spider{
      if(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
       if(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
-      nextPointIndex.x = nextPointIndex.x % net.nRings;
+      nextPointIndex.x = nextPointIndex.x % (net.nRings+1);
       screenDestination = net.getNetPoint((int)nextPointIndex.x,(int)nextPointIndex.y).position.copy();
       position=nextPointIndex.copy();
+      if(net.isShortcut((int)nextPointIndex.x,(int)nextPointIndex.y)){
+        direction.x = -direction.x;
+        direction.y = -direction.y;
+        println("new dir "+direction);
+        position = net.getShortcutDestIndexes((int)nextPointIndex.x,(int)nextPointIndex.y);
+      }
     }  
   }
   
@@ -107,9 +119,14 @@ public class Spider{
       while(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
       while(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
-      nextPointIndex.x = nextPointIndex.x % net.nRings;
+      nextPointIndex.x = nextPointIndex.x % (net.nRings+1);
       screenDestination = net.getNetPoint((int)nextPointIndex.x,(int)nextPointIndex.y).position.copy();
       position=nextPointIndex.copy();
+      if(net.isShortcut((int)nextPointIndex.x,(int)nextPointIndex.y)){
+        direction.x = -direction.x;
+        direction.y = -direction.y;
+        position = net.getShortcutDestIndexes((int)nextPointIndex.x,(int)nextPointIndex.y);
+      }
     }
   }
   
