@@ -78,8 +78,8 @@ public class Spider{
       position.x = position.x % net.nRings;
       screenPosition = net.getNetPoint((int)(position.x),(int)(position.y)).position.copy();
       PVector nextPointIndex = PVector.add(position, direction);
-      println("nextpos: "+nextPointIndex);  
-      if(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
+       println("nextpos: "+nextPointIndex+" direc: "+direction);
+     if(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
       if(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
       nextPointIndex.x = nextPointIndex.x % net.nRings;
@@ -98,12 +98,12 @@ public class Spider{
       position.y = position.y % 8;
       position.x = position.x % net.nRings;
       screenPosition = net.getNetPoint((int)position.x,(int)position.y).position.copy();
-      PVector backDirection = direction;
+     /* PVector backDirection = direction.copy();
       backDirection.x = -backDirection.x;
-      backDirection.y = -backDirection.y;
+      backDirection.y = -backDirection.y;*/
       
-      PVector nextPointIndex = PVector.add(position, backDirection);
-      println("nextpos: "+nextPointIndex);
+      PVector nextPointIndex = PVector.sub(position, direction);
+      println("nextpos: "+nextPointIndex+" direc: "+direction);
       while(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
       while(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
