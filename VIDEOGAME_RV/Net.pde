@@ -27,6 +27,25 @@ public class Net{
     }
   }
   
+  Point getNetPoint(int xIndex, int yIndex){
+    int x,y;
+    if(net.get(xIndex).get(yIndex).type=='S'){
+      x=(int)net.get(xIndex).get(yIndex).position.x;
+      y=(int)net.get(xIndex).get(yIndex).position.y;
+    }else{
+      x=xIndex;
+      y=yIndex;
+    }
+    return (net.get(x).get(y));
+  }
+  
+  float getAngleFrom2NetIndexes(PVector origin, PVector destination){
+    PVector direction = PVector.sub(destination, origin);
+    PVector cero = new PVector(0,0);
+    return degrees(PVector.angleBetween(direction, cero));
+    
+  }
+  
   void drawNet(){
     for(int i=0;i<=nRings;i++){
       for(int j=0;j<8;j++){
@@ -70,7 +89,7 @@ public class Net{
           fill(255,0,0);
           ellipse(pAux.x,pAux.y,5,5);
           popMatrix();
-          println("Drawing shortcut at index "+p.position+" at pos:"+pAux);
+         // println("Drawing shortcut at index "+p.position+" at pos:"+pAux);
         }
       }
     }
