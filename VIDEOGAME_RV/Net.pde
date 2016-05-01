@@ -12,9 +12,12 @@ public class Net{
      
         float angle = 22.5;
         for(int j=0;j<8;j++){
-           if(i<nRings){
+          if(i==0){//Atajo del medio
+              println("ADDED SHORTWAY POS: ("+(1)+","+(j+4)%8+")");
+              net.get(i).add(new Point('S',new PVector(1, (j+4)%8)));
+          }else if(i<nRings){
               net.get(i).add(new Point('E',new PVector((i+1)*radius*cos(radians(angle)), (i+1)*radius*sin(radians(angle)))));
-              println("POS: ("+(i+1)*radius*cos(radians(angle))+","+(i+1)*radius*sin(radians(angle))+")");
+              println("POS: "+i+","+j+": ("+(i+1)*radius*cos(radians(angle))+","+(i+1)*radius*sin(radians(angle))+")");
               angle = angle +45;
            }else{
               println("ADDED SHORTWAY POS: ("+(nRings-1)+","+(j+4)%8+")");
@@ -22,6 +25,31 @@ public class Net{
            }
         }
     }
+  }
+  boolean isShortcut(int xIndex, int yIndex) {
+     return (net.get(xIndex).get(yIndex).type=='S');
+  }
+  PVector getShortcutDestIndexes(int xIndex, int yIndex){
+    return net.get(xIndex).get(yIndex).position.copy();
+  }
+  
+  Point getNetPoint(int xIndex, int yIndex){
+    int x,y;
+    if(net.get(xIndex).get(yIndex).type=='S'){
+      x=(int)net.get(xIndex).get(yIndex).position.x;
+      y=(int)net.get(xIndex).get(yIndex).position.y;
+    }else{
+      x=xIndex;
+      y=yIndex;
+    }
+    return (net.get(x).get(y));
+  }
+  
+  float getAngleFrom2NetIndexes(PVector origin, PVector destination){
+    PVector direction = PVector.sub(destination, origin);
+    PVector cero = new PVector(0,0);
+    return degrees(PVector.angleBetween(direction, cero));
+    
   }
   
   void drawNet(){
@@ -44,7 +72,13 @@ public class Net{
           
            if (i>0) pPrev = net.get((i-1)).get(j);
            
+           if(pPrev.type=='S'){
+             pPrev = net.get((int)pPrev.position.x).get((int)pPrev.position.y);
+           }
             pCont = net.get((i)).get((j+1)%8);
+            if(pCont.type=='S'){
+             pCont = net.get((int)pCont.position.x).get((int)pCont.position.y);
+            }
             
             pushMatrix();
             translate(width/2, height/2);
@@ -61,6 +95,7 @@ public class Net{
           fill(255,0,0);
           ellipse(pAux.x,pAux.y,5,5);
           popMatrix();
+         // println("Drawing shortcut at index "+p.position+" at pos:"+pAux);
         }
       }
     }
