@@ -10,6 +10,7 @@ class Menu{
     int state; //first state
     Button play,options,exit,home;
     void draw(){
+         background(0);
          play.show();
          options.show();
          exit.show();  
@@ -24,29 +25,29 @@ class Menu{
         /*SET PLAY BUTTON*/
         play = cp5.addButton("Play")
            .setValue(0)
-           .setPosition(400-100,200)
+           .setPosition((width/2)-100,200)
            .setSize(200,19)
            ;
         /*SET EXIT BUTTON*/   
         exit=  cp5.addButton("Exit")
            .setValue(100)
-           .setPosition(400-100,300)
+           .setPosition((width/2)-100,300)
            .setSize(200,19)
            ;
         /*SET OPTIONS BUTTON*/
         options= cp5.addButton("Options")
            .setValue(100)
-           .setPosition(400-100,250)
+           .setPosition((width/2)-100,250)
            .setSize(200,19)
            ;
-         /* PImage[] imgs = {loadImage("home.png"),loadImage("home.png"),loadImage("home.png")};
+       //  PImage[] imgs = {loadImage("home.png"),loadImage("home.png"),loadImage("home.png")};
         home = cp5.addButton("Home")
            .setValue(128)
            .setPosition(10,10)
-           .setImages(imgs)
+          // .setImages(imgs)
            .updateSize()
            .hide()
-            ;*/
+            ;
     }
    
 }//end of Class
