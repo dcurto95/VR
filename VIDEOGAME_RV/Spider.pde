@@ -17,7 +17,7 @@ public class Spider{
     this.position = positionInMatrix;
     angle = 0;
     direction = new PVector(sin(radians(angle)), cos(radians(angle)));
-    screenPosition = net.getNetPoint((int)position.x, (int)position.y).position.copy();
+    screenPosition = net.getNetPoint((int)position.x, (int)position.y).position.get();
     screenDestination = screenPosition;
     isMoving = false;
     println("firstpos: "+position+ " first direct: "+direction);
@@ -77,15 +77,15 @@ public class Spider{
       while(position.y<0){position.y = position.y + 8;}
       position.y = position.y % 8;
       position.x = position.x % net.nRings;
-      screenPosition = net.getNetPoint((int)(position.x),(int)(position.y)).position.copy();
+      screenPosition = net.getNetPoint((int)(position.x),(int)(position.y)).position.get();
       PVector nextPointIndex = PVector.add(position, direction);
        println("nextpos: "+nextPointIndex+" direc: "+direction);
      if(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
       if(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
       nextPointIndex.x = nextPointIndex.x % (net.nRings+1);
-      screenDestination = net.getNetPoint((int)nextPointIndex.x,(int)nextPointIndex.y).position.copy();
-      position=nextPointIndex.copy();
+      screenDestination = net.getNetPoint((int)nextPointIndex.x,(int)nextPointIndex.y).position.get();
+      position=nextPointIndex.get();
       if(net.isShortcut((int)nextPointIndex.x,(int)nextPointIndex.y)){
         direction.x = -direction.x;
         direction.y = -direction.y;
@@ -104,7 +104,7 @@ public class Spider{
       if(position.y<0){position.y = position.y + 8;}
       position.y = position.y % 8;
       position.x = position.x % net.nRings;
-      screenPosition = net.getNetPoint((int)position.x,(int)position.y).position.copy();
+      screenPosition = net.getNetPoint((int)position.x,(int)position.y).position.get();
      
       PVector nextPointIndex = PVector.sub(position, direction);
       println("nextpos: "+nextPointIndex+" direc: "+direction);
@@ -112,8 +112,8 @@ public class Spider{
       while(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
       nextPointIndex.x = nextPointIndex.x % (net.nRings+1);
-      screenDestination = net.getNetPoint((int)nextPointIndex.x,(int)nextPointIndex.y).position.copy();
-      position=nextPointIndex.copy();
+      screenDestination = net.getNetPoint((int)nextPointIndex.x,(int)nextPointIndex.y).position.get();
+      position=nextPointIndex.get();
       if(net.isShortcut((int)nextPointIndex.x,(int)nextPointIndex.y)){
         direction.x = -direction.x;
         direction.y = -direction.y;
