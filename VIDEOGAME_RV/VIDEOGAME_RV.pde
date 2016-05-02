@@ -1,5 +1,6 @@
 //Library imports
 import controlP5.*;
+import sprites.*;
 //Constants
 final int VIDEO_INICIAL = 0;
 final int Home = 1;
@@ -12,6 +13,7 @@ Net net;
 Hud hud;
 Background background;
 Spider spider;
+Sprite spiderSprite;
 Menu menu;
 int menuState;
 float n,n1;//Variables for color fadein
@@ -24,7 +26,8 @@ void setup(){
   net = new Net(4);
   //hud = new Hud(this);
   background = new Background();
-  spider = new Spider(new PVector(1,1));
+  spiderSprite = new Sprite(this, "images/spider.png", 7, 4, 0);
+  spider = new Spider(new PVector(1,1),spiderSprite);
   menu = new Menu(this);
 }
 
@@ -57,16 +60,12 @@ void draw(){
           exit();
       break; 
   }
- 
 }
-
-
 //Mouse click control
 void mouseClicked() {
  // print("info: MOUSE PRESSED\n");
  // println("info: COORDINATES [" + mouseX + "," + mouseY + "]");
  // hud.startTimer();
- 
 }
 //Key control (variable key always returns the ASCI number of the pressed key, i think)
 void keyPressed() {
@@ -77,7 +76,7 @@ void keyPressed() {
   if(key == 'a') spider.turnLeft();
   if(key == 'd') spider.turnRight();
   if(key == 'w') spider.goToNextPointForward();
-  if(key == 's') spider.goToNextPointBackWards(); 
+  if(key == 's') spider.goToNextPointBackWards(); spiderSprite.setFrameSequence(7, 11,0.03f);
 }
 
 //Callbacks starts when a menu Button is pressed 
