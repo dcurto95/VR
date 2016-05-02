@@ -24,7 +24,7 @@ void setup(){
   size(1024,768);
   //fullScreen(); 
   net = new Net(4);
-  //hud = new Hud(this);
+  hud = new Hud(this);
   background = new Background();
   spiderSprite = new Sprite(this, "images/spider.png", 7, 4, 0);
   spider = new Spider(new PVector(1,1),spiderSprite);
@@ -45,9 +45,9 @@ void draw(){
       break;
       case GAME:
       background(255);
-        //  background.display(); //Displays background images
+          background.display(); //Displays background images
           net.drawNet(); //Display spider net
-         // hud.display(); //Display hud info
+          hud.display(); //Display hud info
           spider.updateSpiderPositionInScreen();
           spider.drawSpider();
           menu.hide();
@@ -65,7 +65,7 @@ void draw(){
 void mouseClicked() {
  // print("info: MOUSE PRESSED\n");
  // println("info: COORDINATES [" + mouseX + "," + mouseY + "]");
- // hud.startTimer();
+ hud.startTimer();
 }
 //Key control (variable key always returns the ASCI number of the pressed key, i think)
 void keyPressed() {
