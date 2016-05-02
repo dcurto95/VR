@@ -30,7 +30,7 @@ public class Net{
      return (net.get(xIndex).get(yIndex).type=='S');
   }
   PVector getShortcutDestIndexes(int xIndex, int yIndex){
-    return net.get(xIndex).get(yIndex).position.copy();
+    return net.get(xIndex).get(yIndex).position.get();
   }
   
   Point getNetPoint(int xIndex, int yIndex){
