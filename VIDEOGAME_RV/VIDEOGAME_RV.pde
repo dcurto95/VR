@@ -10,7 +10,7 @@ Net net;
 Hud hud;
 Background background;
 Spider spider;
-Butterfly[] butterfly = new Butterfly[20];
+Butterfly[] butterfly = new Butterfly[NBR_BUTTERFLY];
 Sprite buterflySprite;
 
 void setup(){
@@ -39,13 +39,18 @@ void setup(){
 
 //Draw function
 void draw(){
+  
   background(255);
   background.display();     //Displays background images
   net.drawNet();            //Display spider net
+  
+  //SPIDER
   spider.drawSpider();
   spider.updateSpiderPositionInScreen();
+  
   hud.display();           //Display hud info   
   
+  //BUTTERFLIES
   for (int i = 0; i < NBR_BUTTERFLY; i++) {
        if(butterfly[i].show == true){
          butterfly[i].update();
@@ -54,8 +59,6 @@ void draw(){
        }
    }
    S4P.updateSprites(0.01f);
-  
-  
   
 }
 
@@ -77,9 +80,3 @@ void keyPressed() {
   if(key == 'w') spider.goToNextPointForward();
   if(key == 's') spider.goToNextPointBackWards(); 
 }
-
-//Callbacks starts when a menu Button is pressed 
-  /* public void Home(){    menuState = 1; }
-   public void Play(){    menuState = 2; }
-   public void Options(){ menuState = 3; c2 = color(150,0,0); c2 = color(255,255,0);  }
-   public void Exit(){    menuState = 4; }*/
