@@ -11,11 +11,9 @@ class Background{
   }
 
   void display() {
-    image(view, 0, 0);
-    //image(view2, 0, 0);
+    //image(view, 0, 0);
+    image(view2, 0, 0);
     image(window, 0, 0);
-    //image(spiderweb, 0, 0);
-    //image(spiderweb2, 0, 0);
   }
 
   void loadAllImages() {
@@ -25,8 +23,6 @@ class Background{
     view2.resize(width, height);
     window = loadImage("images/window-alpha-blurred.png");
     window.resize(width, height);
-    /*spiderweb = loadImage("images/web-1-alpha.png");
-    spiderweb.resize(displayWidth, displayHeight);*/
   }
 
 

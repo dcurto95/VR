@@ -64,8 +64,8 @@ public class Net{
           
           pushMatrix();
           translate(width/2, height/2);
-          fill(0);
-          ellipse(p.position.x,p.position.y,10,10);
+          fill(255);
+          ellipse(p.position.x,p.position.y,15,15);
           popMatrix();
           Point pPrev = null;
           Point pCont = null;
@@ -82,8 +82,8 @@ public class Net{
             
             pushMatrix();
             translate(width/2, height/2);
-            fill(0);
-            stroke(0);
+            stroke(255);
+            strokeWeight(3);
             if (pPrev != null && pPrev.type=='E') line(pPrev.position.x,pPrev.position.y,p.position.x,p.position.y);
             if(pCont.type=='E') line(pCont.position.x,pCont.position.y,p.position.x,p.position.y);
             popMatrix();

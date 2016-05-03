@@ -1,11 +1,11 @@
 class Hud {
 
   //Constants
-  final int COUNT_DOWN_TIME = 10; //in seconds 
-  final int INITIAL_LIFE = 10; //in seconds 
-  final int MAX_LIFES = 10; //in seconds 
-  final int W = displayWidth;
-  final int H = displayHeight;
+  final int COUNT_DOWN_TIME = 10;   //in seconds 
+  final int INITIAL_LIFE = 10;      //in seconds 
+  final int MAX_LIFES = 10; 
+  final int W = width;
+  final int H = height;
 
   //Game variables
   int lifesSpider;
@@ -24,12 +24,9 @@ class Hud {
     isStopped = true;
 
     //Load HUD image
-    hudImage =loadImage("images/hud.png");
-    hudImage.resize(displayWidth, displayHeight);
-  }
-
-  void run() {
-    display();
+    hudImage = loadImage("images/hud.png");
+    hudImage.resize(W, H);
+    
   }
 
   //Shows HUD image + punctuation + Time left
@@ -50,9 +47,10 @@ class Hud {
 
   void updateScores() {
     fill(255);      
-    textSize(50);
-    text(nf(lifesBoy, 2), 410, 125); 
-    text(nf(lifesSpider, 2), 1205, 125);
+    rectMode(CENTER);  
+    textSize(35);
+    text(nf(lifesBoy, 2), W*0.24, H*0.12); 
+    text(nf(lifesSpider, 2), W*0.71, H*0.12);
   }
 
   //Starts countdown
@@ -92,7 +90,7 @@ class Hud {
       seconds = COUNT_DOWN_TIME;
     }
     fill(0);
-    textSize(40);
-    text(nf((seconds/60 % 60), 2) + ":" + nf((seconds % 60), 2), W/2 - 60, (W/16) + 20);
+    textSize(25);
+    text(nf((seconds/60 % 60), 2) + ":" + nf((seconds % 60), 2), W/2 - 35, (W/16) + 20);
   }
 }//endClass
