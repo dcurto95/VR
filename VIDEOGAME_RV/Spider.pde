@@ -24,6 +24,7 @@ public class Spider{
     screenDestination = screenPosition;
     isMoving = false;
     spiderSprite = new Sprite(thePApplet, "images/spider.png", 7, 4, 0);
+    spiderSprite.setScale(2.5);
     
     println("firstpos: "+position+ " first direct: "+direction);
     println("irst drawing at: "+screenPosition);
@@ -69,6 +70,7 @@ public class Spider{
   }
   
   public void goToNextPointForward(){
+    spiderSprite.setFrameSequence(7, 11,0.03f);
     if(!isMoving){
       println("forward");
       println("pos: "+position);
@@ -131,9 +133,9 @@ public class Spider{
     rectMode(CENTER);    
     rotate(radians(net.getAngleFrom2NetIndexes(position, PVector.add(position,direction))));
     fill(255,0,0);
-    rect(screenPosition.x, screenPosition.y,50,20);
-    //spiderSprite.setXY(screenPosition.x,screenPosition.y);
-    //spiderSprite.draw();
+    //rect(screenPosition.x, screenPosition.y,50,20);
+    spiderSprite.setXY(screenPosition.x,screenPosition.y);
+    spiderSprite.draw();
     popMatrix();
     
     

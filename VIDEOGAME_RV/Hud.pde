@@ -31,7 +31,10 @@ class Hud {
 
   //Shows HUD image + punctuation + Time left
   void display() {
+    pushMatrix();
+    translate(width/2, height/2);
     image(hudImage, 0, 0);
+    popMatrix();
     updateTime();  
     updateScores();
   }
