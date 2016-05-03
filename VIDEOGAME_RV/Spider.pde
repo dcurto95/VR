@@ -26,8 +26,8 @@ public class Spider{
     spiderSprite = new Sprite(thePApplet, "images/spider.png", 7, 4, 0);
     spiderSprite.setScale(2.5);
     
-    println("firstpos: "+position+ " first direct: "+direction);
-    println("irst drawing at: "+screenPosition);
+    //println("firstpos: "+position+ " first direct: "+direction);
+    //println("irst drawing at: "+screenPosition);
   }
   
   public void turnLeft(){
@@ -37,7 +37,7 @@ public class Spider{
       direction = new PVector(sin(/*radians(*/angle/*)*/), cos(/*radians(*/angle/*)*/));
       if(abs(direction.x)<0.1) direction.x=0;
       if(abs(direction.y)<0.1) direction.y=0;
-      println(direction);
+      //println(direction);
     }
   }
   
@@ -48,7 +48,7 @@ public class Spider{
       direction = new PVector(sin(angle), cos(angle));
     if(abs(direction.x)<0.1) direction.x=0;
     if(abs(direction.y)<0.1) direction.y=0;
-    println(direction);
+    //println(direction);
     }
   }
   
@@ -72,8 +72,8 @@ public class Spider{
   public void goToNextPointForward(){
     spiderSprite.setFrameSequence(7, 11,0.03f);
     if(!isMoving){
-      println("forward");
-      println("pos: "+position);
+      //println("forward");
+      //println("pos: "+position);
       
       isMoving = true;
       while(position.x<0){position.x = position.x + net.nRings;}
@@ -82,7 +82,7 @@ public class Spider{
       position.x = position.x % net.nRings;
       screenPosition = net.getNetPoint((int)(position.x),(int)(position.y)).position.get();
       PVector nextPointIndex = PVector.add(position, direction);
-      println("nextpos: "+nextPointIndex+" direc: "+direction);
+      //println("nextpos: "+nextPointIndex+" direc: "+direction);
      if(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
       if(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
@@ -92,7 +92,7 @@ public class Spider{
       if(net.isShortcut((int)nextPointIndex.x,(int)nextPointIndex.y)){
         direction.x = -direction.x;
         direction.y = -direction.y;
-        println("new dir "+direction);
+        //println("new dir "+direction);
         position = net.getShortcutDestIndexes((int)nextPointIndex.x,(int)nextPointIndex.y);
       }
     }
@@ -101,9 +101,9 @@ public class Spider{
   public void goToNextPointBackWards(){
     spiderSprite.setFrameSequence(7, 11,0.03f);
     if(!isMoving){
-      println("back");
+      //println("back");
       isMoving = true;
-      println("pos: "+position);
+      //println("pos: "+position);
       if(position.x<0){position.x = position.x + net.nRings;}
       if(position.y<0){position.y = position.y + 8;}
       position.y = position.y % 8;
@@ -111,7 +111,7 @@ public class Spider{
       screenPosition = net.getNetPoint((int)position.x,(int)position.y).position.get();
      
       PVector nextPointIndex = PVector.sub(position, direction);
-      println("nextpos: "+nextPointIndex+" direc: "+direction);
+      //println("nextpos: "+nextPointIndex+" direc: "+direction);
       while(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
       while(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
@@ -127,7 +127,6 @@ public class Spider{
   }
   
   public void drawSpider(){
-    
     pushMatrix();
     translate(width/2, height/2);
     rectMode(CENTER);    
@@ -136,8 +135,7 @@ public class Spider{
     //rect(screenPosition.x, screenPosition.y,50,20);
     spiderSprite.setXY(screenPosition.x,screenPosition.y);
     spiderSprite.draw();
-    popMatrix();
-    
-    
+    popMatrix();     
   }
+  
 }
