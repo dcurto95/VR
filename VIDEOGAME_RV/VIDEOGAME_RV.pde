@@ -4,11 +4,14 @@ import sprites.*;
 import fullscreen.*;
 
 //Variables
+final int NBR_BUTTERFLY = 20;
 FullScreen fs;
 Net net;
 Hud hud;
 Background background;
 Spider spider;
+Butterfly[] butterfly = new Butterfly[20];
+Sprite buterflySprite;
 
 void setup(){
   
@@ -21,6 +24,15 @@ void setup(){
   hud = new Hud(this);
   background = new Background();
   spider = new Spider(new PVector(1,1), this);
+ 
+  buterflySprite = new Sprite(this, "images/butterfly.png", 12, 8, 21);
+    
+  for (int i = 0; i <NBR_BUTTERFLY; i++) {
+    butterfly[i] = new Butterfly(buterflySprite);
+    butterfly[i].selectButterfly((int) random(1,8));
+  }
+ 
+ 
   
 }
 
@@ -33,6 +45,17 @@ void draw(){
   spider.drawSpider();
   spider.updateSpiderPositionInScreen();
   hud.display();           //Display hud info   
+  
+  for (int i = 0; i < NBR_BUTTERFLY; i++) {
+       if(butterfly[i].show == true){
+         butterfly[i].update();
+         butterfly[i].checkEdges(); 
+         butterfly[i].display();
+       }
+   }
+   S4P.updateSprites(0.01f);
+  
+  
   
 }
 
