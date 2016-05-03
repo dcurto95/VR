@@ -35,6 +35,13 @@ public class Net{
   
   Point getNetPoint(int xIndex, int yIndex){
     int x,y;
+    
+    if(xIndex<0){xIndex = xIndex + nRings;}
+    if(yIndex<0){yIndex = yIndex + 8-1;}
+      
+    xIndex = xIndex%(nRings+1);
+    yIndex = yIndex%8;
+    
     if(net.get(xIndex).get(yIndex).type=='S'){
       x=(int)net.get(xIndex).get(yIndex).position.x;
       y=(int)net.get(xIndex).get(yIndex).position.y;
@@ -45,10 +52,10 @@ public class Net{
     return (net.get(x).get(y));
   }
   
-  float getAngleFrom2NetIndexes(PVector origin, PVector destination){
-    PVector direction = PVector.sub(destination, origin);
-    PVector cero = new PVector(0,0);
-    return degrees(PVector.angleBetween(direction, cero));
+  float getAngleFrom2NetIndexes(PVector originIndexes, PVector destinationIndexes){
+    PVector direction = PVector.sub(getNetPoint((int)destinationIndexes.x,(int)destinationIndexes.y).position.get() , getNetPoint((int)originIndexes.x,(int)originIndexes.y).position.get());
+   // PVector cero = new PVector(0,0);
+    return degrees(direction.heading());
     
   }
   

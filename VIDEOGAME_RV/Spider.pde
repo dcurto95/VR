@@ -1,5 +1,5 @@
 public class Spider{
-  public PVector position; //Representa los indices de la matriz en el que esta la araña
+  public PVector indexPosition; //Representa los indices de la matriz en el que esta la araña
   public PVector direction; // Representa un vector de movimiento sobre la matriz (hacia donde esta mirando la araña)
                                 //  (0,1): ir en sentido anti horario
                                 //  (1,0): ir hacia fuera
@@ -8,19 +8,21 @@ public class Spider{
  
   public PVector screenDestination;
   public PVector screenPosition;
-  private float angle = 0;
+  private float angle = 0; //se usa para calcular la direccion en la que se mueve la araña
   
   private float angleInScreen;
+  private boolean goingForward; //true si va hacia delante, false si va hacia atras (solo hacerle caso si isMoving=true)
+  
   public boolean isMoving;
   
   public Spider(PVector positionInMatrix, Sprite spiderSprite){
-    this.position = positionInMatrix;
+    this.indexPosition = positionInMatrix;
     angle = 0;
     direction = new PVector(sin(radians(angle)), cos(radians(angle)));
-    screenPosition = net.getNetPoint((int)position.x, (int)position.y).position.get();
+    screenPosition = net.getNetPoint((int)indexPosition.x, (int)indexPosition.y).position.get();
     screenDestination = screenPosition;
     isMoving = false;
-    println("firstpos: "+position+ " first direct: "+direction);
+    println("firstpos: "+indexPosition+ " first direct: "+direction);
     println("irst drawing at: "+screenPosition);
   }
   public void turnLeft(){
@@ -29,9 +31,14 @@ public class Spider{
       
       angle = angle + PI/2;//90;
       direction = new PVector(sin(/*radians(*/angle/*)*/), cos(/*radians(*/angle/*)*/));
-      if(abs(direction.x)<0.1) direction.x=0;
-      if(abs(direction.y)<0.1) direction.y=0;
-      println(direction);
+      if(abs(direction.x)<0.5) direction.x=0;
+      if(abs(direction.y)<0.5) direction.y=0;
+      if(direction.x>0.5) direction.x=1;
+      if(direction.x<-0.5) direction.x=-1;
+      if(direction.y>0.5) direction.y=1;
+      if(direction.y<-0.5) direction.y=-1;
+      
+      println("Dir: "+direction);
     }
   }
   
@@ -44,7 +51,11 @@ public class Spider{
  
     if(abs(direction.x)<0.1) direction.x=0;
     if(abs(direction.y)<0.1) direction.y=0;
-    println(direction);
+    if(direction.x>0.5) direction.x=1;
+    if(direction.x<-0.5) direction.x=-1;
+    if(direction.y>0.5) direction.y=1;
+    if(direction.y<-0.5) direction.y=-1;
+    println("Dir: "+direction);
     }
   }
   
@@ -58,9 +69,9 @@ public class Spider{
         
       }else{
         screenPosition = screenDestination;
-        println("pos: "+position);
-        //position.add(direction);
-        //println("pos: "+position);
+        println("pos: "+indexPosition);
+        //indexPosition.add(direction);
+        //println("pos: "+indexPosition);
         isMoving = false;
       }
     }
@@ -70,71 +81,83 @@ public class Spider{
   public void goToNextPointForward(){
     if(!isMoving){
       println("forward");
-      println("pos: "+position);
+      println("pos: "+indexPosition);
       
       isMoving = true;
-      while(position.x<0){position.x = position.x + net.nRings;}
-      while(position.y<0){position.y = position.y + 8;}
-      position.y = position.y % 8;
-      position.x = position.x % net.nRings;
-      screenPosition = net.getNetPoint((int)(position.x),(int)(position.y)).position.get();
-      PVector nextPointIndex = PVector.add(position, direction);
+      goingForward = true;
+      while(indexPosition.x<0){indexPosition.x = indexPosition.x + net.nRings;}
+      while(indexPosition.y<0){indexPosition.y = indexPosition.y + 8;}
+      indexPosition.y = indexPosition.y % 8;
+      indexPosition.x = indexPosition.x % net.nRings;
+      screenPosition = net.getNetPoint((int)(indexPosition.x),(int)(indexPosition.y)).position.get();
+      PVector nextPointIndex = PVector.add(indexPosition, direction);
        println("nextpos: "+nextPointIndex+" direc: "+direction);
      if(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
       if(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
       nextPointIndex.x = nextPointIndex.x % (net.nRings+1);
       screenDestination = net.getNetPoint((int)nextPointIndex.x,(int)nextPointIndex.y).position.get();
-      position=nextPointIndex.get();
+      indexPosition=nextPointIndex.get();
       if(net.isShortcut((int)nextPointIndex.x,(int)nextPointIndex.y)){
         direction.x = -direction.x;
         direction.y = -direction.y;
         println("new dir "+direction);
-        position = net.getShortcutDestIndexes((int)nextPointIndex.x,(int)nextPointIndex.y);
+        indexPosition = net.getShortcutDestIndexes((int)nextPointIndex.x,(int)nextPointIndex.y);
       }
     }
+    println("Dir "+direction);
   }
   
   public void goToNextPointBackWards(){
     if(!isMoving){
       println("back");
       isMoving = true;
-      println("pos: "+position);
-      if(position.x<0){position.x = position.x + net.nRings;}
-      if(position.y<0){position.y = position.y + 8;}
-      position.y = position.y % 8;
-      position.x = position.x % net.nRings;
-      screenPosition = net.getNetPoint((int)position.x,(int)position.y).position.get();
+      goingForward = false;
+      
+      println("pos: "+indexPosition);
+      if(indexPosition.x<0){indexPosition.x = indexPosition.x + net.nRings;}
+      if(indexPosition.y<0){indexPosition.y = indexPosition.y + 8;}
+      indexPosition.y = indexPosition.y % 8;
+      indexPosition.x = indexPosition.x % net.nRings;
+      screenPosition = net.getNetPoint((int)indexPosition.x,(int)indexPosition.y).position.get();
      
-      PVector nextPointIndex = PVector.sub(position, direction);
+      PVector nextPointIndex = PVector.sub(indexPosition, direction);
       println("nextpos: "+nextPointIndex+" direc: "+direction);
       while(nextPointIndex.x<0){nextPointIndex.x = nextPointIndex.x + net.nRings;}
       while(nextPointIndex.y<0){nextPointIndex.y = nextPointIndex.y + 8;}
       nextPointIndex.y = nextPointIndex.y % 8;
       nextPointIndex.x = nextPointIndex.x % (net.nRings+1);
       screenDestination = net.getNetPoint((int)nextPointIndex.x,(int)nextPointIndex.y).position.get();
-      position=nextPointIndex.get();
+      indexPosition=nextPointIndex.get();
       if(net.isShortcut((int)nextPointIndex.x,(int)nextPointIndex.y)){
         direction.x = -direction.x;
         direction.y = -direction.y;
-        position = net.getShortcutDestIndexes((int)nextPointIndex.x,(int)nextPointIndex.y);
+        indexPosition = net.getShortcutDestIndexes((int)nextPointIndex.x,(int)nextPointIndex.y);
       }
     }
   }
   
   public void drawSpider(){
+   if(!isMoving){
+    
+       angleInScreen = net.getAngleFrom2NetIndexes(indexPosition, PVector.add(indexPosition,direction));
+    }else{
+       PVector dest = PVector.sub(screenDestination,screenPosition);
+       angleInScreen = degrees(dest.heading());   
+    }
     pushMatrix();
-    rotate(radians(net.getAngleFrom2NetIndexes(position, PVector.add(position,direction))));
+   // println("Angle Spider: "+angle);
+    translate(width/2+screenPosition.x, height/2+screenPosition.y);
+    if(isMoving && !goingForward){
+      rotate(radians(angleInScreen));//-90)); //+180 solo si va hacia delante, sino no
+    }else{
+      rotate(radians(angleInScreen+180));
+    }
     rectMode(CENTER);
     fill(0,255,0);
-   // translate(screenPosition.x, screenPosition.y);
-   translate(width/2, height/2);
-  // println("drawing at: "+screenPosition);
-    //rect(screenPosition.x, screenPosition.y,50,20);
-    spiderSprite.setXY(screenPosition.x,screenPosition.y);
+    spiderSprite.setXY(0,0);//screenPosition.x,screenPosition.y);
     spiderSprite.draw();
     popMatrix();
-    
-    
+ 
   }
 }
