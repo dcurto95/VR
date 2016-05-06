@@ -5,7 +5,7 @@ public class Net{
   
   public Net(int nRings){
     this.nRings = nRings;
-    radius = 80;
+    radius = 50;
     net = new ArrayList<ArrayList<Point>>();
     for(int i=0;i<=nRings;i++){
       net.add(new ArrayList<Point>());
