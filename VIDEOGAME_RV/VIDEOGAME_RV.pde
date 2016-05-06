@@ -14,6 +14,9 @@ Spider spider;
 Butterfly[] butterfly = new Butterfly[NBR_BUTTERFLY];
 Sprite buterflySprite;
 SimpleOpenNI  context;
+
+int rotating = 0;
+int[] userList;
 color[]       userClr = new color[]{ color(255,0,0),
                                      color(0,255,0),
                                      color(0,0,255),
@@ -39,7 +42,7 @@ void setup(){
   
   // enable depthMap generation 
   context.enableDepth();
-   
+//  context.enableRGB();
   // enable skeleton generation for all joints
   context.enableUser();
  
@@ -75,16 +78,18 @@ void draw(){
   hud.display();           //Display hud info   
   
   //BUTTERFLIES
-  for (int i = 0; i < NBR_BUTTERFLY; i++) {
+/*  for (int i = 0; i < NBR_BUTTERFLY; i++) {
        if(butterfly[i].show == true){
          butterfly[i].update();
          butterfly[i].checkEdges(); 
          butterfly[i].display();
        }
-   }
+   }*/
    S4P.updateSprites(0.01f);
    context.update();
+   image(context.depthImage(),0,0);
    checkSpiderControls();
+   
 }
 
 //Mouse click control
@@ -107,6 +112,7 @@ void keyPressed() {
 }
 
 void checkSpiderControls(){
+  rotating=rotating-1;
   PVector posTorso,posNeck,torsoOrientation, posRHand, posLHand;
   PVector posLShoulder,posRShoulder, posRElbow, posLElbow;
   posTorso = new PVector();
@@ -120,7 +126,7 @@ void checkSpiderControls(){
   posLElbow = new PVector();
   
   
-  int[] userList = context.getUsers();
+  userList = context.getUsers();
   for(int i=0;i<userList.length;i++)
   {
     if(context.isTrackingSkeleton(userList[i]))
@@ -139,6 +145,9 @@ void checkSpiderControls(){
       context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_SHOULDER,posLShoulder);
       context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER,posRShoulder);
       
+      
+      float yDifferenceInShoulders = posLShoulder.y - posRShoulder.y;
+    
       //Convertir posiciones a coordenadas en 2D (pantalla)
       context.convertRealWorldToProjective(posTorso, posTorso);
       context.convertRealWorldToProjective(posNeck, posNeck);
@@ -157,7 +166,7 @@ void checkSpiderControls(){
       shoulderAngleR = degrees(PVector.angleBetween(vertical, PVector.sub(posRElbow,posRShoulder)));
       
       //Comprobar que los brazos estan abiertos (como en cruz con el cuerpo)
-      if(shoulderAngleL<120 && shoulderAngleL>60 && shoulderAngleR<120 && shoulderAngleL>60){
+/*      if(shoulderAngleL<120 && shoulderAngleL>60 && shoulderAngleR<120 && shoulderAngleL>60){
         println("Arms ok");
         float elbowAngleL,elbowAngleR;
         elbowAngleL = degrees(PVector.angleBetween(posLShoulder, PVector.sub(posLHand,posLElbow)));
@@ -176,23 +185,40 @@ void checkSpiderControls(){
       }else{
         println("Arms angles: "+shoulderAngleL+"    "+shoulderAngleR);
       }
-      
-      //A partir de la orientacion del torso decidir si giramos o no
-      float angleTorso = degrees(PVector.angleBetween(vertical, torsoOrientation));
-      println(angleTorso);
-      if(angleTorso<130){
-         if(torsoOrientation.x>0){
-           println("right");
+  */    
+  
+    println("Shoulder diff:"+yDifferenceInShoulders);   
+    if(rotating<0){
+      if(abs(yDifferenceInShoulders)>150){
+        if(yDifferenceInShoulders>0){
+          println("Right");
           spider.turnRight();
-         }else{
-          println("left");
+        }else{
+          println("Left");
           spider.turnLeft();
-         }
-        
-      }else{
-        angleTorso=300;
+        }
+        rotating = 20;
       }
       
+    }
+      //A partir de la orientacion del torso decidir si giramos o no
+     /* float angleTorso = degrees(PVector.angleBetween(vertical, torsoOrientation));
+      println(angleTorso);
+      if(rotating<0){
+        if(angleTorso<160){
+           if(torsoOrientation.x>0){
+             println("right");
+            spider.turnRight();
+           }else{
+            println("left");
+            spider.turnLeft();
+           }
+        rotating=20;
+        }else{
+          angleTorso=300;
+        }
+        
+      }*/ 
     }    
   }
 }
@@ -204,8 +230,9 @@ void onNewUser(SimpleOpenNI curContext, int userId)
 {
   println("onNewUser - userId: " + userId);
   println("\tstart tracking skeleton");
-  
-  curContext.startTrackingSkeleton(userId);
+  if(userList!= null && userList.length==0){
+    curContext.startTrackingSkeleton(userId);
+  }
 }
 
 void onLostUser(SimpleOpenNI curContext, int userId)
