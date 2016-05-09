@@ -70,6 +70,7 @@ public class Spider{
       if((PVector.sub(screenPosition, screenDestination)).mag() > 1){
         PVector sub = PVector.sub(screenDestination, screenPosition);
         sub.normalize();
+        sub.mult(1.5);
         screenPosition.add(sub);
         S4P.updateSprites(0.01f);      
       }else{
