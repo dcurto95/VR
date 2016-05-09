@@ -15,7 +15,7 @@ class Background{
     translate(width/2, height/2);
     //image(view, 0, 0);
     image(view2, 0, 0);
-    image(window, 0, 0);
+   // image(window, 0, 0);
     popMatrix();
   }
 

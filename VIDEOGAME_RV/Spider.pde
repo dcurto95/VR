@@ -26,8 +26,10 @@ public class Spider{
     screenDestination = screenPosition;
     isMoving = false;
     spiderSprite = new Sprite(thePApplet, "images/spider.png", 7, 4, 0);
-    spiderSprite.setScale(2.5);
-    //println("firstpos: "+indexPosition+ " first direct: "+direction);
+
+    spiderSprite.setScale(1.5);
+    
+    //println("firstpos: "+position+ " first direct: "+direction);
     //println("irst drawing at: "+screenPosition);
     
   }
@@ -173,3 +175,4 @@ public class Spider{
   }
 
 }
+
