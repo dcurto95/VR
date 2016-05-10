@@ -6,4 +6,5 @@ public class Point{
     this.type = type;
     this.position = position;
   }
+  
 }

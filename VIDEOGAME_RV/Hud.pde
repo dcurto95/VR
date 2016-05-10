@@ -39,15 +39,6 @@ class Hud {
     updateScores();
   }
 
-  void substractLifeSpider() {
-    if (lifesSpider > 0 && !isStopped) lifesSpider--;
-  }
-
-  void substractLifeBoy() {
-    if (lifesBoy > 0 && !isStopped) lifesBoy--;
-  }
-
-
   void updateScores() {
     fill(255);      
     rectMode(CENTER);  
@@ -55,13 +46,7 @@ class Hud {
     text(nf(lifesBoy, 2), W*0.24, H*0.12); 
     text(nf(lifesSpider, 2), W*0.71, H*0.12);
   }
-
-  //Starts countdown
-  void startTimer() {
-    isStopped = false;
-    startTime = millis()/1000 + COUNT_DOWN_TIME;
-  }
-
+  
   //Resets the timer countdown
   void resetAll() {
     isStopped = true;
@@ -72,12 +57,17 @@ class Hud {
 
   void showGameOver() {
     seconds = 0;
-    textSize(60); fill(255, 0, 0);
-    text("TIME OVER", W/2, H/2);
-    textSize(80); fill(0);
-    if (lifesBoy>lifesSpider) text("BUTT WINS", W/2 -220, H/2+200);
-    else  text("SPIDER WINS", W/2 -220, H/2+200);
+    textSize(50); fill(0);
+    if (lifesBoy>lifesSpider) text("TIME OVER: BUTT WINS", W/2 -220, H/2+200);
+    else  text("TIME OVER: SPIDER WINS", W/2 -220, H/2+200);
     //isStopped = true;
+  }
+  
+  
+  //Starts countdown
+  void startTimer() {
+    isStopped = false;
+    startTime = millis()/1000 + COUNT_DOWN_TIME;
   }
 
   //Refresh and shows the timer information
@@ -96,4 +86,14 @@ class Hud {
     textSize(25);
     text(nf((seconds/60 % 60), 2) + ":" + nf((seconds % 60), 2), W/2 - 35, (W/16) + 20);
   }
+  
+  
+  void substractLifeSpider() {
+    if (lifesSpider > 0 && !isStopped) lifesSpider--;
+  }
+
+  void substractLifeBoy() {
+    if (lifesBoy > 0 && !isStopped) lifesBoy--;
+  }
+  
 }//endClass
