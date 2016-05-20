@@ -32,11 +32,10 @@ color[]       userClr = new color[]{ color(255,0,0),
                                      color(255,0,255),
                                      color(0,255,255)
                                    };
-
+float X_SCALE_VALUE, Y_SCALE_VALUE;
 void setup(){
   
-  size(1024,768);
-  //fullScreen(); 
+  size(displayWidth, displayHeight);//fullScreen(); 
   //fs = new Fullscreen(this);
   //fs.enter();
   
@@ -86,7 +85,11 @@ void setup(){
   
   //spiderSprite = new Sprite(this, "images/spider.png", 7, 4, 21);
   //registerMethod("keyEvent", this);
-  
+  //kinect 640 x 480
+  // pantalla width x height
+  X_SCALE_VALUE = 2*width * 640 / 480;
+  Y_SCALE_VALUE = height * 480 / 640;
+        
 }
 
 
@@ -156,7 +159,7 @@ void draw(){
             p = (PVector) itrVec.next(); 
             
             context.convertRealWorldToProjective(p,p2d);
-            vertex(p2d.x*2,p2d.y);
+            vertex(p2d.x*X_SCALE_VALUE,p2d.y*Y_SCALE_VALUE);
           }
         endShape();   
   
@@ -164,7 +167,12 @@ void draw(){
         strokeWeight(4);
         p = vecList.get(0);
         context.convertRealWorldToProjective(p,p2d);
-        point(p2d.x*2,p2d.y);
+        
+        println("log adso projected" + p2d.x + "-" + p2d.y);
+        
+        
+        
+        point(p2d.x*X_SCALE_VALUE,p2d.y*Y_SCALE_VALUE);
         
         posHand = p2d;
         //context.convertRealWorldToProjective(p,posHand);
@@ -246,6 +254,7 @@ void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
   if(vecList != null)
   {
     vecList.add(0,pos);
+    println("log adso"+pos);
     if(vecList.size() >= handVecListSize)
       // remove the last point 
       vecList.remove(vecList.size()-1); 
