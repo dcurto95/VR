@@ -16,10 +16,11 @@ Background background;
 Spider spider;
 Butterfly[] butterfly = new Butterfly[NBR_BUTTERFLY];
 Sprite buterflySprite;
+SimpleOpenNI  context;
+SpiderController spiderController;
 Sprite SpiderSprite;
 
 //VAR CONTROL KINNECT
-SimpleOpenNI context;
 int handVecListSize = 20;
 PVector posHand;
     boolean tocat;
@@ -32,40 +33,49 @@ color[]       userClr = new color[]{ color(255,0,0),
                                      color(0,255,255)
                                    };
 
-
-
 void setup(){
-  size(640, 480);
-  net = new Net(4);
-  hud = new Hud(this);
-  background = new Background();
-  spider = new Spider(new PVector(1,1), this);
- 
-
   
-  //KINNECT
-  PVector p2d = new PVector();
-  PVector posHand = new PVector(0,0);
-
+  size(1024,768);
+  //fullScreen(); 
+  //fs = new Fullscreen(this);
+  //fs.enter();
+  
   context = new SimpleOpenNI(this);
   if(context.isInit() == false)
   {
      println("Can't init SimpleOpenNI, maybe the camera is not connected!"); 
      exit();
      return;  
-  }   
-
+  }
+  
   // enable depthMap generation 
   context.enableDepth();
-  
+  // enable skeleton generation for all joints
+  context.enableUser();
+ 
   // disable mirror
   context.setMirror(true);
-
-  // enable hands + gesture generation
+// enable hands + gesture generation
   //context.enableGesture();
   context.enableHand();
   context.startGesture(SimpleOpenNI.GESTURE_WAVE);
+ 
+  net = new Net(4);
+  hud = new Hud(this);
+  background = new Background();
+  spider = new Spider(new PVector(1,1), this);
+  spiderController = new SpiderController();
+  buterflySprite = new Sprite(this, "images/butterfly.png", 12, 8, 21);
+    
+  for (int i = 0; i <NBR_BUTTERFLY; i++) {
+    butterfly[i] = new Butterfly(buterflySprite);
+    butterfly[i].selectButterfly((int) random(1,8));
+  }
   
+   //KINNECT Hand
+  PVector p2d = new PVector();
+  PVector posHand = new PVector(0,0);
+
   // set how smooth the hand capturing should be
   //context.setSmoothingHands(.5);
     // Create the fullscreen object
@@ -74,17 +84,8 @@ void setup(){
   // enter fullscreen mode
   fs.enter();
   
-  Sprite buterflySprite = new Sprite(this, "images/butterfly.png", 12, 8, 21);
-  
   //spiderSprite = new Sprite(this, "images/spider.png", 7, 4, 21);
   //registerMethod("keyEvent", this);
-  
-  for (int i = 0; i <NBR_BUTTERFLY; i++) {
-    butterfly[i] = new Butterfly(buterflySprite);
-    butterfly[i].selectButterfly((int) random(1,8));  }
-  
- 
- 
   
 }
 
@@ -111,11 +112,10 @@ void draw(){
        }
    }
    S4P.updateSprites(0.01f);
-   
    //KINNECT
    context.update();
-
-  //image(context.depthImage(),0,0);
+  // image(context.depthImage(),0,0);
+   spiderController.checkSpiderControls();
     
     update();
   if (!tocat){
@@ -171,8 +171,6 @@ void draw(){
  
     }        
   }
-  
-  
 }
 
 
@@ -202,6 +200,30 @@ void keyPressed() {
   if(key == 'w') spider.goToNextPointForward();
   if(key == 's') spider.goToNextPointBackWards(); 
 }
+    
+  
+void onNewUser(SimpleOpenNI curContext, int userId)
+  {
+    println("onNewUser - userId: " + userId);
+    println("\tstart tracking skeleton");
+    if(spiderController.userList!= null && spiderController.userList.length==0){
+      context.startTrackingSkeleton(userId);
+    }
+  }
+  
+  void onLostUser(SimpleOpenNI curContext, int userId)
+  {
+    println("onLostUser - userId: " + userId);
+  }
+  
+  void onVisibleUser(SimpleOpenNI curContext, int userId)
+  {
+    //println("onVisibleUser - userId: " + userId);
+  }
+
+
+
+
 
 // -----------------------------------------------------------------
 // hand events
