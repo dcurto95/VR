@@ -13,7 +13,7 @@ class Butterfly{
     topspeed = 2;
     show = true;
     this.butterfly = butterfly;
-    butterfly.setScale(1.75);
+    butterfly.setScale(4);
 
   }
 

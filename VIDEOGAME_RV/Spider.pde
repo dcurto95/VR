@@ -27,7 +27,7 @@ public class Spider{
     isMoving = false;
     spiderSprite = new Sprite(thePApplet, "images/spider.png", 7, 4, 0);
 
-    spiderSprite.setScale(3);
+    spiderSprite.setScale(3.5);
     
     //println("firstpos: "+position+ " first direct: "+direction);
     //println("irst drawing at: "+screenPosition);
@@ -74,19 +74,21 @@ public class Spider{
         sub.normalize();
         sub.mult(1.5);
         screenPosition.add(sub);
-        S4P.updateSprites(0.01f);      
+        S4P.updateSprites(0.9f);      
       }else{
         screenPosition = screenDestination;
    //    println("pos: "+indexPosition);
         //indexPosition.add(direction);
         //println("pos: "+indexPosition);
+        spiderSprite.setFrameSequence(7, 7,0.9f);
+        S4P.updateSprites(0.9f); 
         isMoving = false;
       }
     }
   }
   
   public void goToNextPointForward(){
-    spiderSprite.setFrameSequence(7, 11,0.03f);
+    spiderSprite.setFrameSequence(7, 11,0.2f);
     if(!isMoving){
       //println("forward");
       //println("pos: "+indexPosition);

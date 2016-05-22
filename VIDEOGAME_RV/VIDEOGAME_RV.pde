@@ -221,7 +221,7 @@ void onNewUser(SimpleOpenNI curContext, int userId)
   
   void onVisibleUser(SimpleOpenNI curContext, int userId)
   {
-    //println("onVisibleUser - userId: " + userId);
+    println("onVisibleUser - userId: " + userId);
   }
 
 
@@ -249,7 +249,7 @@ void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
   if(vecList != null)
   {
     vecList.add(0,pos);
-    println("log adso"+pos);
+    //println("log adso"+pos);
     if(vecList.size() >= handVecListSize)
       // remove the last point 
       vecList.remove(vecList.size()-1); 
