@@ -13,10 +13,6 @@ class Butterfly{
     topspeed = 2;
     show = true;
     this.butterfly = butterfly;
-<<<<<<< HEAD
-=======
-    butterfly.setScale(1.75);
->>>>>>> e92f47da5a01a41f4524d293036f3a3803b6071f
   }
 
 
@@ -24,10 +20,7 @@ class Butterfly{
 
     acceleration = PVector.random2D();
     acceleration.mult(random(1));
-<<<<<<< HEAD
 
-=======
->>>>>>> e92f47da5a01a41f4524d293036f3a3803b6071f
     velocity.add(acceleration);
     velocity.limit(topspeed);
     location.add(velocity);
@@ -91,8 +84,4 @@ class Butterfly{
   
   }
 }
-<<<<<<< HEAD
 
-=======
-
->>>>>>> e92f47da5a01a41f4524d293036f3a3803b6071f

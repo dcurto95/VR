@@ -39,13 +39,17 @@ color[]       userClr = new color[]{ color(255,0,0),
     Butterfly[] butterfly = new Butterfly[20];
     Sprite spiderSprite;
     Sprite buterflySprite;
-                                   
+           
+    float conversioWidth;                        
+    float conversioHeight;                        
                                    
 void setup()
 {
 //  frameRate(200);
-  size(640,480);
+  size(displayWidth,displayHeight);
 
+  conversioWidth = displayWidth / 640;
+  conversioHeight = displayHeight / 480;
 
   PVector p2d = new PVector();
   PVector posHand = new PVector(0,0);
@@ -96,7 +100,7 @@ void draw()
   // update the cam
   context.update();
 
-  //image(context.depthImage(),0,0);
+  image(context.depthImage(),320,240);
     
     update();
   if (!tocat){
@@ -137,6 +141,9 @@ void draw()
             p = (PVector) itrVec.next(); 
             
             context.convertRealWorldToProjective(p,p2d);
+            p2d.x = p2d.x * conversioWidth;
+            p2d.y = p2d.y * conversioHeight;
+            
             vertex(p2d.x,p2d.y);
           }
         endShape();   
