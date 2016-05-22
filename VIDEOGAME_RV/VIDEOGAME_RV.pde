@@ -87,8 +87,11 @@ void setup(){
   //registerMethod("keyEvent", this);
   //kinect 640 x 480
   // pantalla width x height
-  X_SCALE_VALUE = 2*width * 640 / 480;
-  Y_SCALE_VALUE = height * 480 / 640;
+  X_SCALE_VALUE = (float)(displayWidth) / (float)(640);
+  Y_SCALE_VALUE = (float)(displayHeight) / (float)(480);
+  
+  //println("disp width" + displayWidth + "-" + X_SCALE_VALUE);
+  //println("disp width" + displayHeight + "-" + Y_SCALE_VALUE);
         
 }
 
@@ -106,14 +109,6 @@ void draw(){
   
   hud.display();           //Display hud info   
   
-  //BUTTERFLIES
-  for (int i = 0; i < NBR_BUTTERFLY; i++) {
-       if(butterfly[i].show == true){
-         butterfly[i].update();
-         butterfly[i].checkEdges(); 
-         butterfly[i].display();
-       }
-   }
    S4P.updateSprites(0.01f);
    //KINNECT
    context.update();
@@ -121,7 +116,7 @@ void draw(){
    spiderController.checkSpiderControls();
     
     update();
-  if (!tocat){
+
     
      //spiderSprite.setXY(x,y);
      
@@ -135,7 +130,7 @@ void draw(){
      }
      S4P.updateSprites(0.01f);
     ///mage(img,200,200);
-  }
+  
     
   // draw the tracked hands
   if(handPathList.size() > 0)  
@@ -159,7 +154,7 @@ void draw(){
             p = (PVector) itrVec.next(); 
             
             context.convertRealWorldToProjective(p,p2d);
-            vertex(p2d.x*X_SCALE_VALUE,p2d.y*Y_SCALE_VALUE);
+            vertex(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
           }
         endShape();   
   
@@ -168,11 +163,11 @@ void draw(){
         p = vecList.get(0);
         context.convertRealWorldToProjective(p,p2d);
         
-        println("log adso projected" + p2d.x + "-" + p2d.y);
+        //println("log adso projected" + p2d.x + "-" + p2d.y);
         
         
         
-        point(p2d.x*X_SCALE_VALUE,p2d.y*Y_SCALE_VALUE);
+        point(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
         
         posHand = p2d;
         //context.convertRealWorldToProjective(p,posHand);
@@ -184,7 +179,7 @@ void draw(){
 
  void update(){
    for (int i = 0; i < NBR_BUTTERFLY; i++){
-     if (posHand!=null && posHand.x > butterfly[i].location.x - 10 && posHand.y > butterfly[i].location.y -10 && posHand.x < butterfly[i].location.x + 10 && posHand.y < butterfly[i].location.y +10 ){    
+     if (posHand!=null && X_SCALE_VALUE*posHand.x > butterfly[i].location.x - 10 && Y_SCALE_VALUE*posHand.y > butterfly[i].location.y -10 && X_SCALE_VALUE*posHand.x < butterfly[i].location.x + 10 && Y_SCALE_VALUE*posHand.y < butterfly[i].location.y +10 ){    
           butterfly[i].show = false;
      }
    }  
