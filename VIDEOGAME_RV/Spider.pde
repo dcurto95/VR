@@ -160,7 +160,7 @@ public class Spider{
     pushMatrix();
 
    // println("Angle Spider: "+angle);
-    translate(width/2+screenPosition.x, height/2+screenPosition.y);
+    translate(width/2+screenPosition.x, (height+150)/2+screenPosition.y);
     if(isMoving && !goingForward){
       rotate(radians(angleInScreen));//-90)); //+180 solo si va hacia delante, sino no
     }else{

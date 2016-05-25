@@ -1,7 +1,7 @@
 class Hud {
 
   //Constants
-  final int COUNT_DOWN_TIME = 10;   //in seconds 
+  final int COUNT_DOWN_TIME = 100;   //in seconds 
   final int INITIAL_LIFE = 10;      //in seconds 
   final int MAX_LIFES = 10; 
   final int W = width;
@@ -12,7 +12,7 @@ class Hud {
   int lifesBoy;
   boolean isStopped;
   int seconds;
-  int startTime;
+  int startTime = 0;
 
   //Hud Image
   PImage hudImage;
@@ -67,7 +67,8 @@ class Hud {
   //Starts countdown
   void startTimer() {
     isStopped = false;
-    startTime = millis()/1000 + COUNT_DOWN_TIME;
+    startTime = (millis() / 1000) + COUNT_DOWN_TIME;
+    println("startime: "+ System.currentTimeMillis() % 1000 + " "+ COUNT_DOWN_TIME+" "+startTime + " " +millis());
   }
 
   //Refresh and shows the timer information
@@ -77,7 +78,7 @@ class Hud {
         showGameOver();
       }
       if (seconds > 0) {               
-        seconds = startTime - millis()/1000;
+        seconds = startTime - (millis() / 1000);
       }
     } else {
       seconds = COUNT_DOWN_TIME;

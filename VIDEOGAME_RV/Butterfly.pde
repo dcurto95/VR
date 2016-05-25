@@ -3,14 +3,25 @@ class Butterfly{
   PVector location;
   PVector velocity;
   PVector acceleration;
+  PVector dir;
   float topspeed;
   boolean show;
+  PVector pointDst;
   Sprite butterfly;
+  int flagPapallona_engaged;
 
-  Butterfly(Sprite butterfly) {
-    location = new PVector(width-1, 0);
+  Butterfly(Sprite butterfly, PVector pointDest) {
+    location = new PVector(width*random(1), height+random(300));
+   
     velocity = new PVector(0, 0);
     topspeed = 2;
+    flagPapallona_engaged = 0;
+    pointDst = new PVector();
+    pointDst.x = width/2 - pointDest.x;
+    pointDst.y = (height+150)/2 - pointDest.y; 
+    
+    dir = PVector.sub(pointDst, location);
+    
     show = true;
     this.butterfly = butterfly;
     butterfly.setScale(1.75);
@@ -19,9 +30,16 @@ class Butterfly{
 
 
   void update() {
-
-    acceleration = PVector.random2D();
-    acceleration.mult(random(1));
+    
+    if(flagPapallona_engaged == 1){
+      dir = PVector.sub(pointDst, location);
+      dir.normalize();
+      acceleration = dir;
+    }else{
+      acceleration = PVector.random2D();
+      acceleration.mult(random(1));
+    }
+    
     velocity.add(acceleration);
     velocity.limit(topspeed);
     location.add(velocity);
@@ -29,13 +47,9 @@ class Butterfly{
     
   }
 
-  void display() {
-   
+  void display() { 
     butterfly.setXY(location.x,location.y);
-   
     butterfly.draw();
-
-   
   }
 
   void checkEdges() {

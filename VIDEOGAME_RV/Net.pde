@@ -60,6 +60,15 @@ public class Net{
     
   }
   
+   PVector getPointNet(int xIndex, int yIndex){
+    //Point p = net.get(xIndex).get(yIndex);
+    PVector pAux = new PVector(); 
+    pAux.x= net.get(xIndex).get(yIndex).position.x;
+    pAux.y = net.get(xIndex).get(yIndex).position.y;
+    return pAux;
+  }
+  
+  
   void drawNet(){
     for(int i=0;i<=nRings;i++){
       for(int j=0;j<8;j++){
@@ -68,7 +77,9 @@ public class Net{
         if(p.type=='E'){
           
           pushMatrix();
-          translate(width/2, height/2);
+          
+          translate(width/2, (height+150)/2);
+          
           fill(255);
           ellipse(p.position.x,p.position.y,15,15);
           popMatrix();
@@ -86,7 +97,7 @@ public class Net{
             }
             
             pushMatrix();
-            translate(width/2, height/2);
+            translate(width/2, (height+150)/2);
             stroke(255);
             strokeWeight(3);
             if (pPrev != null && pPrev.type=='E') line(pPrev.position.x,pPrev.position.y,p.position.x,p.position.y);
@@ -94,13 +105,13 @@ public class Net{
             popMatrix();
            
         }else{
-          PVector pAux = net.get((int)p.position.x).get((int)p.position.y).position;
+          /*PVector pAux = net.get((int)p.position.x).get((int)p.position.y).position;
           pushMatrix();
           translate(width/2, height/2);
           fill(255,0,0);
           ellipse(pAux.x,pAux.y,5,5);
-          popMatrix();
-         // println("Drawing shortcut at index "+p.position+" at pos:"+pAux);
+          popMatrix();*/
+          //println("Drawing shortcut at index "+p.position+" at pos:"+pAux);
         }
       }
     }
