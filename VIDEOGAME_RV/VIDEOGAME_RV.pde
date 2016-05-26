@@ -126,12 +126,7 @@ void draw(){
   spiderController.checkSpiderControls();
   
   update();
-
-  println("hud seconds"+hud.seconds);
-  println("compte seconds"+compte_segons);
   
-     ///piderSprite.draw();
-     println("seconds"+hud.seconds);
   if(hud.seconds < 100){   
   for (int i = 0; i < NBR_BUTTERFLY; i++) {
      if(butterfly[i].show == true){

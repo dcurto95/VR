@@ -9,10 +9,11 @@ class Butterfly{
   PVector pointDst;
   Sprite butterfly;
   int flagPapallona_engaged;
+  boolean atPoint;
 
   Butterfly(Sprite butterfly, PVector pointDest) {
     location = new PVector(width*random(1), height+random(300));
-   
+   atPoint = false;
     velocity = new PVector(0, 0);
     topspeed = 2;
     flagPapallona_engaged = 0;
@@ -44,7 +45,13 @@ class Butterfly{
     velocity.limit(topspeed);
     location.add(velocity);
     
+    PVector aprox = new PVector();
+    aprox.x = location.x - pointDst.x;
+    aprox.y = location.y - pointDst.y;
     
+    if(aprox.x > -0.9 && aprox.x < 0.9 && aprox.y > -0.9 && aprox.y < 0.9 && atPoint == false){
+       atPoint = true;
+    }
   }
 
   void display() { 
