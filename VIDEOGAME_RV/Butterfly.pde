@@ -51,6 +51,7 @@ class Butterfly{
     
     if(aprox.x > -0.9 && aprox.x < 0.9 && aprox.y > -0.9 && aprox.y < 0.9 && atPoint == false){
        atPoint = true;
+       println("AT POINT");
     }
   }
 
