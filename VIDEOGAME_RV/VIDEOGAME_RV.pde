@@ -4,12 +4,14 @@ import sprites.*;
 import fullscreen.*;
 import java.util.Map;
 import java.util.Iterator;
-import sprites.*;
+
 import SimpleOpenNI.*;
 
 //Variables
 final int NBR_BUTTERFLY = 24;
-FullScreen fs;
+
+final int N_MAX_BUTTERFLIES_IN_NET = 3;
+//FullScreen fs;
 Net net, net2;
 Hud hud;
 Background background;
@@ -20,7 +22,8 @@ SimpleOpenNI  context;
 SpiderController spiderController;
 Sprite SpiderSprite;
 int compte_segons;
-
+boolean handDetected; 
+int nButterfliesInNet = 0;
 //VAR CONTROL KINNECT
 int handVecListSize = 20;
 PVector posHand;
@@ -34,12 +37,13 @@ color[]       userClr = new color[]{ color(255,0,0),
                                      color(0,255,255)
                                    };
 float X_SCALE_VALUE, Y_SCALE_VALUE;
+
 void setup(){
   
   size(displayWidth, displayHeight);//fullScreen(); 
   //fs = new Fullscreen(this);
   //fs.enter();
-  
+   handDetected = false;
   context = new SimpleOpenNI(this);
   if(context.isInit() == false)
   {
@@ -58,17 +62,18 @@ void setup(){
 // enable hands + gesture generation
   //context.enableGesture();
   context.enableHand();
-  context.startGesture(SimpleOpenNI.GESTURE_WAVE);
+  context.startGesture(SimpleOpenNI.GESTURE_CLICK);
  
   net = new Net(4);
   hud = new Hud(this);
   background = new Background();
   spider = new Spider(new PVector(1,1), this);
   spiderController = new SpiderController();
-  buterflySprite = new Sprite(this, "images/butterfly.png", 12, 8, 21);
   
   PVector destPoint = new PVector();
-  net2 = net;
+  destPoint = net.getPointNet(2,2);  
+  
+ net2 = net;
   int numbut = 0;
   for (int i = 0; i <=4; i++) {
     for(int j = 0; j < 8; j++){    
@@ -78,7 +83,7 @@ void setup(){
 
           }else if(i<4){
               destPoint = net2.getPointNet(i,j);  
-              butterfly[numbut] = new Butterfly(buterflySprite, destPoint);
+              butterfly[numbut] = new Butterfly(destPoint, this);
               butterfly[numbut].selectButterfly((int) random(1,8));
               numbut++;
          }
@@ -92,10 +97,10 @@ void setup(){
   // set how smooth the hand capturing should be
   //context.setSmoothingHands(.5);
     // Create the fullscreen object
-  fs = new FullScreen(this); 
+ // fs = new FullScreen(this); 
   
   // enter fullscreen mode
-  fs.enter();
+//  fs.enter();
   
   //spiderSprite = new Sprite(this, "images/spider.png", 7, 4, 21);
   //registerMethod("keyEvent", this);
@@ -114,11 +119,7 @@ void draw(){
   background.display();     //Displays background images
   net.drawNet();            //Display spider net
  
-  //SPIDER
-  spider.drawSpider();
-  spider.updateSpiderPositionInScreen();
   
-  hud.display();           //Display hud info   
   
   //KINNECT
   context.update();
@@ -126,14 +127,15 @@ void draw(){
   spiderController.checkSpiderControls();
   
   update();
-  
-  if(hud.seconds < 100){   
-  for (int i = 0; i < NBR_BUTTERFLY; i++) {
+ 
+  //if(hud.seconds < 100){   
+ 
+    for (int i = 0; i < NBR_BUTTERFLY; i++) {
      if(butterfly[i].show == true){
          
-         if(compte_segons - hud.seconds > random(24)){  
+         if(compte_segons - hud.seconds > random(24) && nButterfliesInNet<N_MAX_BUTTERFLIES_IN_NET){  
            compte_segons = hud.seconds;
-           butterfly[i].flagPapallona_engaged = 1;
+           butterfly[i].setEngaged(); 
          }
          butterfly[i].update();  
          butterfly[i].checkEdges(); 
@@ -141,9 +143,16 @@ void draw(){
          
      }
   }
-}
+  
+//}
      S4P.updateSprites(0.01f);
     
+    //SPIDER
+  spider.drawSpider();
+  spider.updateSpiderPositionInScreen();
+  
+  hud.display();           //Display hud info   
+  
   // draw the tracked hands
   if(handPathList.size() > 0)  
   {    
@@ -201,8 +210,11 @@ void draw(){
 void mouseClicked() {
  print("info: MOUSE PRESSED\n");
  println("info: COORDINATES [" + mouseX + "," + mouseY + "]");
- hud.startTimer();
- compte_segons = hud.seconds;
+ initGame();
+}
+void initGame(){
+  hud.startTimer();
+  compte_segons = hud.seconds;
 }
 
 //Key control (variable key always returns the ASCI number of the pressed key, i think)
@@ -217,11 +229,11 @@ void keyPressed() {
   if(key == 's') spider.goToNextPointBackWards(); 
 }
     
-  
+/*  
 void onNewUser(SimpleOpenNI curContext, int userId)
   {
-    println("onNewUser - userId: " + userId);
-    println("\tstart tracking skeleton");
+    //println("onNewUser - userId: " + userId);
+    //println("\tstart tracking skeleton");
     if(spiderController.userList!= null && spiderController.userList.length==0){
       context.startTrackingSkeleton(userId);
     }
@@ -229,16 +241,16 @@ void onNewUser(SimpleOpenNI curContext, int userId)
   
   void onLostUser(SimpleOpenNI curContext, int userId)
   {
-    println("onLostUser - userId: " + userId);
+ //   println("onLostUser - userId: " + userId);
   }
   
   void onVisibleUser(SimpleOpenNI curContext, int userId)
   {
-    println("onVisibleUser - userId: " + userId);
+ //   println("onVisibleUser - userId: " + userId);
   }
 
 
-
+*/
 
 
 // -----------------------------------------------------------------
@@ -247,16 +259,18 @@ void onNewUser(SimpleOpenNI curContext, int userId)
 void onNewHand(SimpleOpenNI curContext,int handId,PVector pos)
 {
   println("onNewHand - handId: " + handId + ", pos: " + pos);
- 
-  ArrayList<PVector> vecList = new ArrayList<PVector>();
-  vecList.add(pos);
-  
-  handPathList.put(handId,vecList);
+ if(!handDetected){
+    ArrayList<PVector> vecList = new ArrayList<PVector>();
+    vecList.add(pos);
+    
+    handPathList.put(handId,vecList);
+    handDetected = true;
+  }
 }
 
 void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
 {
-  //println("onTrackedHand - handId: " + handId + ", pos: " + pos );
+  println("onTrackedHand - handId: " + handId + ", pos: " + pos );
   
   ArrayList<PVector> vecList = handPathList.get(handId);
   if(vecList != null)
@@ -277,6 +291,7 @@ void onLostHand(SimpleOpenNI curContext,int handId)
 {
   println("onLostHand - handId: " + handId);
   handPathList.remove(handId);
+  handDetected = false;
 }
 
 // -----------------------------------------------------------------
