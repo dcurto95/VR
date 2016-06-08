@@ -12,7 +12,8 @@ class Hud {
   int lifesBoy;
   boolean isStopped;
   int seconds;
-  int startTime = 0;
+  int startTime;
+  Sprite handSprite;
 
   //Hud Image
   PImage hudImage;
@@ -26,17 +27,22 @@ class Hud {
     //Load HUD image
     hudImage = loadImage("images/hud.png");
     hudImage.resize(W, H);
+    startTime = (millis() / 1000) + COUNT_DOWN_TIME;
+    
+    handSprite = new Sprite(thePApplet, "images/HandSprite.png", 1, 1, 21);
     
   }
 
   //Shows HUD image + punctuation + Time left
-  void display() {
+  void display(PVector posHand) {
     pushMatrix();
     translate(width/2, height/2);
     image(hudImage, 0, 0);
     popMatrix();
     updateTime();  
     updateScores();
+    handSprite.setXY(posHand.x,posHand.y);
+    handSprite.draw();
   }
 
   void updateScores() {

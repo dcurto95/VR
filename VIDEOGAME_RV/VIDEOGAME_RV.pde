@@ -16,10 +16,11 @@ Net net, net2;
 Hud hud;
 Background background;
 Spider spider;
-Butterfly[] butterfly = new Butterfly[NBR_BUTTERFLY];
+
 Sprite buterflySprite;
 SimpleOpenNI  context;
 SpiderController spiderController;
+ButterfliesController butterfliesController;
 Sprite SpiderSprite;
 int compte_segons;
 boolean handDetected; 
@@ -69,26 +70,13 @@ void setup(){
   background = new Background();
   spider = new Spider(new PVector(1,1), this);
   spiderController = new SpiderController();
-  
+  butterfliesController = new ButterfliesController(this);
   PVector destPoint = new PVector();
   destPoint = net.getPointNet(2,2);  
   
  net2 = net;
   int numbut = 0;
-  for (int i = 0; i <=4; i++) {
-    for(int j = 0; j < 8; j++){    
-      //Point p = net.get(i).get(j);
-      //destPoint = net.getNetPoint(i, j).position.get();
-      if(i==0){//Atajo del medio
 
-          }else if(i<4){
-              destPoint = net2.getPointNet(i,j);  
-              butterfly[numbut] = new Butterfly(destPoint, this);
-              butterfly[numbut].selectButterfly((int) random(1,8));
-              numbut++;
-         }
-    }
-  }
   
    //KINNECT Hand
   PVector p2d = new PVector();
@@ -109,6 +97,8 @@ void setup(){
   X_SCALE_VALUE = (float)(displayWidth) / (float)(640);
   Y_SCALE_VALUE = (float)(displayHeight) / (float)(480);
         //hud.startTimer();
+        
+        
 }
 
 
@@ -130,20 +120,8 @@ void draw(){
  
   //if(hud.seconds < 100){   
  
-    for (int i = 0; i < NBR_BUTTERFLY; i++) {
-     if(butterfly[i].show == true){
-         
-         if(compte_segons - hud.seconds > random(24) && nButterfliesInNet<N_MAX_BUTTERFLIES_IN_NET){  
-           compte_segons = hud.seconds;
-           butterfly[i].setEngaged(); 
-         }
-         butterfly[i].update();  
-         butterfly[i].checkEdges(); 
-         butterfly[i].display();
-         
-     }
-  }
   
+  butterfliesController.displayButterflies();
 //}
      S4P.updateSprites(0.01f);
     
@@ -151,7 +129,8 @@ void draw(){
   spider.drawSpider();
   spider.updateSpiderPositionInScreen();
   
-  hud.display();           //Display hud info   
+  //TODO: cambiarlo por la posicion de la hand de la kinect
+  hud.display(new PVector(mouseX, mouseY));           //Display hud info   
   
   // draw the tracked hands
   if(handPathList.size() > 0)  
@@ -200,8 +179,12 @@ void draw(){
 
  void update(){
    for (int i = 0; i < NBR_BUTTERFLY; i++){
-     if (posHand!=null && X_SCALE_VALUE*posHand.x > butterfly[i].location.x - 10 && Y_SCALE_VALUE*posHand.y > butterfly[i].location.y -10 && X_SCALE_VALUE*posHand.x < butterfly[i].location.x + 10 && Y_SCALE_VALUE*posHand.y < butterfly[i].location.y +10 ){    
-          butterfly[i].show = false;
+     if (posHand!=null){
+        int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  
+        if(indexCollidedButterfly>-1){
+           butterfliesController.hideButterfly(indexCollidedButterfly);
+        }
+       
      }
    }  
  }

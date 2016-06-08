@@ -1,6 +1,6 @@
 public class Net{
   public ArrayList<ArrayList<Point>> net;
-  private int nRings;
+  public int nRings;
   private int radius;
   
   public Net(int nRings){
