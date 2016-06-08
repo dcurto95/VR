@@ -8,9 +8,10 @@ import java.util.Iterator;
 import SimpleOpenNI.*;
 
 //Variables
-final int NBR_BUTTERFLY = 24;
+final int NBR_BUTTERFLY = 1;
 
 final int N_MAX_BUTTERFLIES_IN_NET = 3;
+final int MILLIS_TO_FREE_BUTTERFLY = 2000;
 //FullScreen fs;
 Net net, net2;
 Hud hud;
@@ -176,17 +177,38 @@ void draw(){
   }
 }
 
-
+int tocado=0;
  void update(){
-   for (int i = 0; i < NBR_BUTTERFLY; i++){
+  /* float startingTime;
+   
+     posHand = new PVector(mouseX, mouseY);
      if (posHand!=null){
         int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  
         if(indexCollidedButterfly>-1){
+          println("Mariposa tocada");
+           startingTime = millis();
+           while(millis()-startingTime>MILLIS_TO_FREE_BUTTERFLY){
+             if(butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y)!=indexCollidedButterfly){
+               return;
+             }
+           }
            butterfliesController.hideButterfly(indexCollidedButterfly);
+           println("Mariposa hidden");
         }
        
-     }
-   }  
+     }*/
+    for (int n=0;n<NBR_BUTTERFLY;n++){
+      println(hud.handSprite.getX()+ ","+ hud.handSprite.getY());
+      println("POSBUT: "+n+":"+butterfliesController.butterflies[n].butterflySprite.getX()+ ","+ butterfliesController.butterflies[n].butterflySprite.getY());
+    
+      if(butterfliesController.butterflies[n].butterflySprite.bb_collision(hud.handSprite)){
+        println("TOCADOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+        tocado++;
+        if(tocado>100) butterfliesController.butterflies[n].freeButterfly();
+      }else{
+        println("fallaste wey");
+       }
+    }
  }
 
 //Mouse click control

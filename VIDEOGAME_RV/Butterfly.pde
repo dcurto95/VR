@@ -11,6 +11,7 @@ class Butterfly{
   PVector pointDst;
   Sprite butterflySprite;
   boolean flagPapallona_engaged;
+  boolean isFree; //Si isFree ya la has liberado y no puede re engancharse
   boolean atPoint;
   Sprite cocoonSprite;
   Butterfly(PVector pointDest, PApplet thePApplet) {
@@ -29,7 +30,7 @@ class Butterfly{
     dir = PVector.sub(pointDst, location);
     
     show = true;
-    
+    isFree=false;
   }
 
 
@@ -45,7 +46,13 @@ class Butterfly{
       acceleration.mult(random(1));
       
     }
-    
+    if(isFree){
+      
+      println("soy free");
+      dir = PVector.sub(new PVector(random(width),-10), location);
+      dir.normalize();
+      acceleration = dir;
+    }
     velocity.add(acceleration);
     velocity.limit(topspeed);
     location.add(velocity);
@@ -60,6 +67,7 @@ class Butterfly{
        butterflySprite.setFrameSequence(0,0,0.03f);
        
     }
+    selectButterfly((int) random(1,8));
   }
 
   void display() { 
@@ -70,15 +78,21 @@ class Butterfly{
       cocoonSprite.setXY(location.x,location.y);
       cocoonSprite.draw();
     }
+    
   }
 
   void setEngaged(){
-    flagPapallona_engaged = true;
-    nButterfliesInNet++;
+    if(!isFree){
+      flagPapallona_engaged = true;
+      nButterfliesInNet++;
+    }
   }
   void freeButterfly(){
     flagPapallona_engaged = false;
+    isFree = true;
     nButterfliesInNet--;
+    atPoint = false;
+    
   }
   
   void checkEdges() {
@@ -100,7 +114,6 @@ class Butterfly{
   
   public void selectButterfly(int random){
     int frame =0; 
-    println("In select but");
     switch(random) {
        case 1:
          butterflySprite.setFrameSequence(0,2,0.03f);
@@ -136,7 +149,6 @@ class Butterfly{
        break;
      }
       if(this.flagPapallona_engaged){
-        println("Stopped?");
         butterflySprite.setFrameSequence(frame,frame,0.03f);
       }
   }

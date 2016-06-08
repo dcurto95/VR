@@ -16,8 +16,8 @@ class ButterfliesController{
 
           }else if(i<4){
               destPoint = net.getPointNet(i,j);  
-              butterflies[numbut] = new Butterfly(destPoint, thePApplet);
-              butterflies[numbut].selectButterfly((int) random(1,8));
+              butterflies[0] = new Butterfly(destPoint, thePApplet);
+              butterflies[0].selectButterfly((int) random(1,8));
               numbut++;
          }
       }
