@@ -83,8 +83,11 @@ public class Spider{
         spiderSprite.setFrameSequence(7, 7,0.9f);
         S4P.updateSprites(0.9f); 
         isMoving = false;
+        net.reactivateNetPointAtScreenPosition(screenPosition);
+      
       }
     }
+    
   }
   
   public void goToNextPointForward(){
@@ -92,7 +95,7 @@ public class Spider{
     if(!isMoving){
       //println("forward");
       //println("pos: "+indexPosition);
-      
+      net.reactivateNetPointAtScreenPosition(screenPosition);
       isMoving = true;
       goingForward = true;
       while(indexPosition.x<0){indexPosition.x = indexPosition.x + net.nRings;}
@@ -124,6 +127,7 @@ public class Spider{
     spiderSprite.setFrameSequence(7, 11,0.03f);
     if(!isMoving){
       //println("back");
+      net.reactivateNetPointAtScreenPosition(screenPosition);
       isMoving = true;
       goingForward = false;
       

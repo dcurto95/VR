@@ -73,13 +73,14 @@ class Butterfly{
   }
 
   void display() { 
-    if(!this.atPoint){
+    if(!this.atPoint || this.isFree){
       butterflySprite.setXY(location.x,location.y);
       butterflySprite.draw();
     }else{
       cocoonSprite.setXY(location.x,location.y);
       cocoonSprite.draw();
     }
+    
     
   }
 

@@ -67,6 +67,20 @@ public class Net{
     }
   }
   
+  void reactivateNetPointAtScreenPosition(PVector position){
+    PVector dist;
+    println("Trying to reactivate pos: "+position);
+    //position.sub(new PVector(width/2, (height+150)/2));
+    for(int i=0;i<=nRings;i++){
+      for(int j=0;j<8;j++){
+        dist = PVector.sub(getNetPoint(i,j).position, position);
+        if(abs(dist.x)<10 && abs(dist.y)<10){
+          getNetPoint(i,j).setPointEnabled();
+        }
+      }
+    }
+  }
+  
   float getAngleFrom2NetIndexes(PVector originIndexes, PVector destinationIndexes){
     PVector direction = PVector.sub(getNetPoint((int)destinationIndexes.x,(int)destinationIndexes.y).position.get() , getNetPoint((int)originIndexes.x,(int)originIndexes.y).position.get());
     return degrees(direction.heading());
@@ -78,7 +92,7 @@ public class Net{
     pAux.y = net.get(xIndex).get(yIndex).position.y;
     return pAux;
   }
-    
+ 
   void drawNet(){
     for(int i=0;i<=nRings;i++){
       for(int j=0;j<8;j++){

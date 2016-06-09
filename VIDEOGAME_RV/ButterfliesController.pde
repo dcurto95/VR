@@ -1,6 +1,7 @@
 class ButterfliesController{
   
   private Butterfly[] butterflies;
+  private final int ALLOWED_ERROR = 30;
   
   public ButterfliesController(PApplet thePApplet){
     butterflies = new Butterfly[NBR_BUTTERFLY];
@@ -49,7 +50,7 @@ class ButterfliesController{
   
   for (int i = 0; i < NBR_BUTTERFLY; i++){
   //  println("Comparing "+butterflies[i].location+" with "+x+","+y);
-     if (butterflies[i].atPoint && x > butterflies[i].location.x - 10 && y > butterflies[i].location.y -10 && x < butterflies[i].location.x + 10 && y < butterflies[i].location.y +10 ){    
+     if (butterflies[i].atPoint && x > butterflies[i].location.x - ALLOWED_ERROR && y > butterflies[i].location.y -ALLOWED_ERROR && x < butterflies[i].location.x + ALLOWED_ERROR && y < butterflies[i].location.y +ALLOWED_ERROR ){    
           return i;
      }
    }
