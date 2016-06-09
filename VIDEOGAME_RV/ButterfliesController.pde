@@ -1,5 +1,6 @@
 class ButterfliesController{
-  public Butterfly[] butterflies;
+  
+  private Butterfly[] butterflies;
   
   public ButterfliesController(PApplet thePApplet){
     butterflies = new Butterfly[NBR_BUTTERFLY];
@@ -45,8 +46,6 @@ class ButterfliesController{
   }
   
   public int checkButterfliesCollision(float x, float y){ //Devuelve indice de mariposa k colisiona, o -1 si no colisiona
-//  x = x-width/2;
-//  y= y-(height+150)/2;
   
   for (int i = 0; i < NBR_BUTTERFLY; i++){
   //  println("Comparing "+butterflies[i].location+" with "+x+","+y);
@@ -60,8 +59,6 @@ class ButterfliesController{
   public void hideButterfly(int index){
     butterflies[index].show = false;
   }
-  
-  
   
 }
 

@@ -13,6 +13,8 @@ class Hud {
   boolean isStopped;
   int seconds;
   int startTime;
+  
+  //Hand Image
   Sprite handSprite;
 
   //Hud Image
@@ -33,7 +35,7 @@ class Hud {
     
   }
 
-  //Shows HUD image + punctuation + Time left
+  //Shows HUD image + punctuation + Time left + displays Hand
   void display(PVector posHand) {
     pushMatrix();
     translate(width/2, height/2);

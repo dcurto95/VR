@@ -7,26 +7,28 @@ import java.util.Iterator;
 
 import SimpleOpenNI.*;
 
-//Variables
+//Constantes
 final int NBR_BUTTERFLY = 24;
-
 final int N_MAX_BUTTERFLIES_IN_NET = 3;
 final int MILLIS_TO_FREE_BUTTERFLY = 5000;
 final int NUMBER_OF_TOUCHES_TO_FREE_BUTTERFLY = 60;
+
+//Variables globales
 //FullScreen fs;
-Net net, net2;
+Net net;
 Hud hud;
 Background background;
 Spider spider;
-
-Sprite buterflySprite;
-SimpleOpenNI  context;
 SpiderController spiderController;
 ButterfliesController butterfliesController;
-Sprite SpiderSprite;
+
 int compte_segons;
+int nButterfliesInNet;
+
+//Kinect
+SimpleOpenNI  context;
+
 boolean handDetected; 
-int nButterfliesInNet = 0;
 //VAR CONTROL KINNECT
 int handVecListSize = 20;
 PVector posHand;
@@ -43,7 +45,7 @@ float X_SCALE_VALUE, Y_SCALE_VALUE;
 
 void setup(){
   
-  size(displayWidth, displayHeight);//fullScreen(); 
+  size(displayWidth, displayHeight); 
   //fs = new Fullscreen(this);
   //fs.enter();
    handDetected = false;
@@ -86,7 +88,6 @@ void setup(){
   // enter fullscreen mode
 //  fs.enter();
   
-  //spiderSprite = new Sprite(this, "images/spider.png", 7, 4, 21);
   //registerMethod("keyEvent", this);
   //kinect 640 x 480
   // pantalla width x height
@@ -94,7 +95,7 @@ void setup(){
   Y_SCALE_VALUE = (float)(displayHeight) / (float)(480);
         //hud.startTimer();
         
-        
+   nButterfliesInNet = 0;     
 }
 
 
@@ -114,7 +115,7 @@ void draw(){
  
   butterfliesController.displayButterflies();
 
-     S4P.updateSprites(0.01f);
+   S4P.updateSprites(0.01f);
     
     //SPIDER
   spider.drawSpider();
@@ -165,20 +166,13 @@ void draw(){
 
 int tocado=0;
  void update(){
-   float startingTime;
-   
-     posHand = new PVector(mouseX, mouseY);
-     if (posHand!=null){
-        int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(posHand.x, posHand.y);//X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  
-       // println("checking collision with butterflies, result:"+indexCollidedButterfly);
-        println("Tocado: "+tocado+" limit:"+ 60);
+   //TODOOOOOOOOOOOO: pasar de mouse a kinect controls
+     posHand = new PVector(mouseX, mouseY); //TODO:quitar esta linea
+     if (posHand!=null){                  
+        int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(posHand.x, posHand.y);//X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  //TODO: quitar este para aplicar la escala
         if(indexCollidedButterfly>-1){
           tocado++;
-          println("Mariposa tocada: "+indexCollidedButterfly);
-         //startingTime = millis();
-         //  while(millis()-startingTime<MILLIS_TO_FREE_BUTTERFLY){
-        //     println("In while");
-           if(butterfliesController.checkButterfliesCollision(/*X_SCALE_VALUE**/posHand.x,/* Y_SCALE_VALUE**/posHand.y)!=indexCollidedButterfly){
+          if(butterfliesController.checkButterfliesCollision(/*X_SCALE_VALUE**/posHand.x,/* Y_SCALE_VALUE**/posHand.y)!=indexCollidedButterfly){//TODO: quitar este para aplicar la escala
              tocado = 0;
            }else if(tocado>NUMBER_OF_TOUCHES_TO_FREE_BUTTERFLY){
              butterfliesController.freeButterflyWithIndex(indexCollidedButterfly);
@@ -188,10 +182,6 @@ int tocado=0;
          tocado=0;
        }
      }
-           
-          //butterfliesController.hideButterfly(indexCollidedButterfly);
-          // println("Mariposa hidden");
-        
        
      /*
     for (int n=0;n<NBR_BUTTERFLY;n++){
@@ -214,6 +204,8 @@ void mouseClicked() {
  println("info: COORDINATES [" + mouseX + "," + mouseY + "]");
  initGame();
 }
+
+
 void initGame(){
   hud.startTimer();
   compte_segons = hud.seconds;
@@ -241,19 +233,15 @@ void onNewUser(SimpleOpenNI curContext, int userId)
     }
   }
   
-  void onLostUser(SimpleOpenNI curContext, int userId)
-  {
-    println("onLostUser - userId: " + userId);
-  }
-  
-  void onVisibleUser(SimpleOpenNI curContext, int userId)
-  {
-    println("onVisibleUser - userId: " + userId);
-  }
+void onLostUser(SimpleOpenNI curContext, int userId)
+{
+  println("onLostUser - userId: " + userId);
+}
 
-
-
-
+void onVisibleUser(SimpleOpenNI curContext, int userId)
+{
+  println("onVisibleUser - userId: " + userId);
+}
 
 // -----------------------------------------------------------------
 // hand events
@@ -283,10 +271,6 @@ void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
       // remove the last point 
       vecList.remove(vecList.size()-1); 
   }  
-  
-
-  
-  
 }
 
 void onLostHand(SimpleOpenNI curContext,int handId)

@@ -1,5 +1,6 @@
 public class Net{
-  public ArrayList<ArrayList<Point>> net;
+  
+  private ArrayList<ArrayList<Point>> net;
   public int nRings;
   private int radius;
   
@@ -54,15 +55,12 @@ public class Net{
   }
   
   void hidePointWithScreenPosition(PVector position){
-    println("Trying to break point in position:" + position);
     PVector dist;
-   position.sub(new PVector(width/2, (height+150)/2));
+    position.sub(new PVector(width/2, (height+150)/2));
     for(int i=0;i<=nRings;i++){
       for(int j=0;j<8;j++){
         dist = PVector.sub(getNetPoint(i,j).position, position);
-        println("Checkig dist"+dist + "for pos:"+getNetPoint(i,j).position);
         if(abs(dist.x)<10 && abs(dist.y)<10){
-          println("Breaking net point");
           getNetPoint(i,j).setPointDisabled();
         }
       }
@@ -71,20 +69,16 @@ public class Net{
   
   float getAngleFrom2NetIndexes(PVector originIndexes, PVector destinationIndexes){
     PVector direction = PVector.sub(getNetPoint((int)destinationIndexes.x,(int)destinationIndexes.y).position.get() , getNetPoint((int)originIndexes.x,(int)originIndexes.y).position.get());
-   // PVector cero = new PVector(0,0);
     return degrees(direction.heading());
-    
   }
   
-   PVector getPointNet(int xIndex, int yIndex){
-    //Point p = net.get(xIndex).get(yIndex);
+  PVector getPointNet(int xIndex, int yIndex){
     PVector pAux = new PVector(); 
     pAux.x= net.get(xIndex).get(yIndex).position.x;
     pAux.y = net.get(xIndex).get(yIndex).position.y;
     return pAux;
   }
-  
-  
+    
   void drawNet(){
     for(int i=0;i<=nRings;i++){
       for(int j=0;j<8;j++){
