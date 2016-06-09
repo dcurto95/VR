@@ -177,6 +177,7 @@ int tocado=0;
            }else if(tocado>NUMBER_OF_TOUCHES_TO_FREE_BUTTERFLY){
              butterfliesController.freeButterflyWithIndex(indexCollidedButterfly);
              tocado=0;
+             hud.substractLifeSpider();
            }
          }else{
          tocado=0;
@@ -196,7 +197,23 @@ int tocado=0;
         }
       }
     }*/
+    tryToEatButterfly();
  }
+
+void tryToEatButterfly(){
+  PVector dist;
+  for (int n=0;n<butterfliesController.getNumberOfButterflies();n++){
+    println("Trying to eat ");
+    
+    dist = PVector.sub(butterfliesController.getButterfly(n).location, PVector.add(spider.screenPosition, new PVector(width/2, (height+150)/2)));
+    println("Spider: "+spider.screenPosition + "Butterfly:"+butterfliesController.getButterfly(n).location);
+    if(abs(dist.x)<10 && abs(dist.y)<10){
+      butterfliesController.removeButterfly(n);
+      hud.substractLifeBoy();
+    return;
+    }     
+  }
+}
 
 //Mouse click control
 void mouseClicked() {

@@ -69,8 +69,6 @@ public class Net{
   
   void reactivateNetPointAtScreenPosition(PVector position){
     PVector dist;
-    println("Trying to reactivate pos: "+position);
-    //position.sub(new PVector(width/2, (height+150)/2));
     for(int i=0;i<=nRings;i++){
       for(int j=0;j<8;j++){
         dist = PVector.sub(getNetPoint(i,j).position, position);
