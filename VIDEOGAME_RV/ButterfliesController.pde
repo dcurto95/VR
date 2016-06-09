@@ -16,15 +16,18 @@ class ButterfliesController{
 
           }else if(i<4){
               destPoint = net.getPointNet(i,j);  
-              butterflies[0] = new Butterfly(destPoint, thePApplet);
-              butterflies[0].selectButterfly((int) random(1,8));
+              butterflies[numbut] = new Butterfly(destPoint, thePApplet);
+              butterflies[numbut].selectButterfly((int) random(1,8));
               numbut++;
          }
       }
     }  
   }
 
-  
+  void freeButterflyWithIndex(int index){
+    butterflies[index].freeButterfly();
+    net.hidePointWithScreenPosition(new PVector((float)butterfliesController.butterflies[index].cocoonSprite.getX(),(float)butterfliesController.butterflies[index].cocoonSprite.getY()));
+  }
   void displayButterflies(){
       for (int i = 0; i < NBR_BUTTERFLY; i++) {
        if(butterflies[i].show == true){
@@ -42,8 +45,12 @@ class ButterfliesController{
   }
   
   public int checkButterfliesCollision(float x, float y){ //Devuelve indice de mariposa k colisiona, o -1 si no colisiona
+//  x = x-width/2;
+//  y= y-(height+150)/2;
+  
   for (int i = 0; i < NBR_BUTTERFLY; i++){
-     if (x > butterflies[i].location.x - 10 && y > butterflies[i].location.y -10 && x < butterflies[i].location.x + 10 && y < butterflies[i].location.y +10 ){    
+  //  println("Comparing "+butterflies[i].location+" with "+x+","+y);
+     if (butterflies[i].atPoint && x > butterflies[i].location.x - 10 && y > butterflies[i].location.y -10 && x < butterflies[i].location.x + 10 && y < butterflies[i].location.y +10 ){    
           return i;
      }
    }

@@ -53,6 +53,22 @@ public class Net{
     return (net.get(x).get(y));
   }
   
+  void hidePointWithScreenPosition(PVector position){
+    println("Trying to break point in position:" + position);
+    PVector dist;
+   position.sub(new PVector(width/2, (height+150)/2));
+    for(int i=0;i<=nRings;i++){
+      for(int j=0;j<8;j++){
+        dist = PVector.sub(getNetPoint(i,j).position, position);
+        println("Checkig dist"+dist + "for pos:"+getNetPoint(i,j).position);
+        if(abs(dist.x)<10 && abs(dist.y)<10){
+          println("Breaking net point");
+          getNetPoint(i,j).setPointDisabled();
+        }
+      }
+    }
+  }
+  
   float getAngleFrom2NetIndexes(PVector originIndexes, PVector destinationIndexes){
     PVector direction = PVector.sub(getNetPoint((int)destinationIndexes.x,(int)destinationIndexes.y).position.get() , getNetPoint((int)originIndexes.x,(int)originIndexes.y).position.get());
    // PVector cero = new PVector(0,0);

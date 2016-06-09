@@ -8,10 +8,11 @@ import java.util.Iterator;
 import SimpleOpenNI.*;
 
 //Variables
-final int NBR_BUTTERFLY = 1;
+final int NBR_BUTTERFLY = 24;
 
 final int N_MAX_BUTTERFLIES_IN_NET = 3;
-final int MILLIS_TO_FREE_BUTTERFLY = 2000;
+final int MILLIS_TO_FREE_BUTTERFLY = 5000;
+final int NUMBER_OF_TOUCHES_TO_FREE_BUTTERFLY = 60;
 //FullScreen fs;
 Net net, net2;
 Hud hud;
@@ -50,8 +51,8 @@ void setup(){
   if(context.isInit() == false)
   {
      println("Can't init SimpleOpenNI, maybe the camera is not connected!"); 
-     exit();
-     return;  
+ //    exit();
+  //   return;  
   }
   
   // enable depthMap generation 
@@ -72,13 +73,7 @@ void setup(){
   spider = new Spider(new PVector(1,1), this);
   spiderController = new SpiderController();
   butterfliesController = new ButterfliesController(this);
-  PVector destPoint = new PVector();
-  destPoint = net.getPointNet(2,2);  
-  
- net2 = net;
-  int numbut = 0;
 
-  
    //KINNECT Hand
   PVector p2d = new PVector();
   PVector posHand = new PVector(0,0);
@@ -110,8 +105,6 @@ void draw(){
   background.display();     //Displays background images
   net.drawNet();            //Display spider net
  
-  
-  
   //KINNECT
   context.update();
   
@@ -119,11 +112,8 @@ void draw(){
   
   update();
  
-  //if(hud.seconds < 100){   
- 
-  
   butterfliesController.displayButterflies();
-//}
+
      S4P.updateSprites(0.01f);
     
     //SPIDER
@@ -164,11 +154,7 @@ void draw(){
         p = vecList.get(0);
         context.convertRealWorldToProjective(p,p2d);
         
-        //println("log adso projected" + p2d.x + "-" + p2d.y);
-        
-        
-        
-        point(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
+         point(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
         
         posHand = p2d;
         //context.convertRealWorldToProjective(p,posHand);
@@ -179,36 +165,47 @@ void draw(){
 
 int tocado=0;
  void update(){
-  /* float startingTime;
+   float startingTime;
    
      posHand = new PVector(mouseX, mouseY);
      if (posHand!=null){
-        int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  
+        int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(posHand.x, posHand.y);//X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  
+       // println("checking collision with butterflies, result:"+indexCollidedButterfly);
+        println("Tocado: "+tocado+" limit:"+ 60);
         if(indexCollidedButterfly>-1){
-          println("Mariposa tocada");
-           startingTime = millis();
-           while(millis()-startingTime>MILLIS_TO_FREE_BUTTERFLY){
-             if(butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y)!=indexCollidedButterfly){
-               return;
-             }
+          tocado++;
+          println("Mariposa tocada: "+indexCollidedButterfly);
+         //startingTime = millis();
+         //  while(millis()-startingTime<MILLIS_TO_FREE_BUTTERFLY){
+        //     println("In while");
+           if(butterfliesController.checkButterfliesCollision(/*X_SCALE_VALUE**/posHand.x,/* Y_SCALE_VALUE**/posHand.y)!=indexCollidedButterfly){
+             tocado = 0;
+           }else if(tocado>NUMBER_OF_TOUCHES_TO_FREE_BUTTERFLY){
+             butterfliesController.freeButterflyWithIndex(indexCollidedButterfly);
+             tocado=0;
            }
-           butterfliesController.hideButterfly(indexCollidedButterfly);
-           println("Mariposa hidden");
-        }
+         }else{
+         tocado=0;
+       }
+     }
+           
+          //butterfliesController.hideButterfly(indexCollidedButterfly);
+          // println("Mariposa hidden");
+        
        
-     }*/
+     /*
     for (int n=0;n<NBR_BUTTERFLY;n++){
-      println(hud.handSprite.getX()+ ","+ hud.handSprite.getY());
-      println("POSBUT: "+n+":"+butterfliesController.butterflies[n].butterflySprite.getX()+ ","+ butterfliesController.butterflies[n].butterflySprite.getY());
+     // println(hud.handSprite.getX()+ ","+ hud.handSprite.getY());
+     // println("POSBUT: "+n+":"+butterfliesController.butterflies[n].butterflySprite.getX()+ ","+ butterfliesController.butterflies[n].butterflySprite.getY());
     
       if(butterfliesController.butterflies[n].butterflySprite.bb_collision(hud.handSprite)){
-        println("TOCADOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         tocado++;
-        if(tocado>100) butterfliesController.butterflies[n].freeButterfly();
-      }else{
-        println("fallaste wey");
-       }
-    }
+        if(tocado>100){
+          butterfliesController.butterflies[n].freeButterfly();
+          net.hidePointWithScreenPosition(new PVector((float)butterfliesController.butterflies[n].cocoonSprite.getX(),(float)butterfliesController.butterflies[n].cocoonSprite.getY()));
+        }
+      }
+    }*/
  }
 
 //Mouse click control
@@ -234,11 +231,11 @@ void keyPressed() {
   if(key == 's') spider.goToNextPointBackWards(); 
 }
     
-/*  
+ 
 void onNewUser(SimpleOpenNI curContext, int userId)
   {
-    //println("onNewUser - userId: " + userId);
-    //println("\tstart tracking skeleton");
+    println("onNewUser - userId: " + userId);
+    println("\tstart tracking skeleton");
     if(spiderController.userList!= null && spiderController.userList.length==0){
       context.startTrackingSkeleton(userId);
     }
@@ -246,16 +243,16 @@ void onNewUser(SimpleOpenNI curContext, int userId)
   
   void onLostUser(SimpleOpenNI curContext, int userId)
   {
- //   println("onLostUser - userId: " + userId);
+    println("onLostUser - userId: " + userId);
   }
   
   void onVisibleUser(SimpleOpenNI curContext, int userId)
   {
- //   println("onVisibleUser - userId: " + userId);
+    println("onVisibleUser - userId: " + userId);
   }
 
 
-*/
+
 
 
 // -----------------------------------------------------------------
