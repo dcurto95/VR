@@ -59,14 +59,14 @@ void setup(){
   // enable depthMap generation 
   context.enableDepth();
   // enable skeleton generation for all joints
- // context.enableUser();
+  context.enableUser();
  
   // disable mirror
   context.setMirror(true);
 // enable hands + gesture generation
   //context.enableGesture();
   context.enableHand();
-  context.startGesture(SimpleOpenNI.GESTURE_CLICK);
+  context.startGesture(SimpleOpenNI.GESTURE_WAVE);
  
   net = new Net(4);
   hud = new Hud(this);
