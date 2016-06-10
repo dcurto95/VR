@@ -31,7 +31,7 @@ SimpleOpenNI  context;
 boolean handDetected; 
 //VAR CONTROL KINNECT
 final int HAND_VEC_LIST_SIZE = 20;
-PVector posHand;
+PVector posHand, posHandToDraw;
     boolean tocat;
 Map<Integer,ArrayList<PVector>>  handPathList = new HashMap<Integer,ArrayList<PVector>>();
 color[]       userClr = new color[]{ color(255,0,0),
@@ -77,15 +77,15 @@ void setup(){
 
    //KINNECT Hand
   PVector p2d = new PVector();
-  PVector posHand = new PVector(0,0);
-
+  posHand = new PVector(0,0);
+  posHandToDraw = new PVector(0,0);
   // set how smooth the hand capturing should be
   //context.setSmoothingHands(.5);
     // Create the fullscreen object
   fs = new FullScreen(this); 
   
   // enter fullscreen mode
-//  fs.enter();
+  fs.enter();
   
   //registerMethod("keyEvent", this);
   //kinect 640 x 480
@@ -102,7 +102,7 @@ void setup(){
 void draw(){
   
   background(255);
- // background.display();     //Displays background images
+  background.display();     //Displays background images
   net.drawNet();            //Display spider net
  
   //KINNECT
@@ -114,6 +114,7 @@ void draw(){
  
   butterfliesController.displayButterflies();
 
+  hud.display();
    S4P.updateSprites(0.01f);
     
     //SPIDER
@@ -121,57 +122,44 @@ void draw(){
   spider.updateSpiderPositionInScreen();
   
   //TODO: cambiarlo por la posicion de la hand de la kinect
-  hud.display(new PVector(mouseX, mouseY));           //Display hud info   
+  posHandToDraw = posHand.get();
+  posHandToDraw.x = posHandToDraw.x * X_SCALE_VALUE;
+  posHandToDraw.y = posHandToDraw.y * Y_SCALE_VALUE;
+  
   
   // draw the tracked hands
   if(handPathList.size() > 0)  
   {    
     Iterator itr = handPathList.entrySet().iterator();     
-    while(itr.hasNext())
-    {
-      Map.Entry mapEntry = (Map.Entry)itr.next(); 
-      int handId =  (Integer)mapEntry.getKey();
-      ArrayList<PVector> vecList = (ArrayList<PVector>)mapEntry.getValue();
-      PVector p;
-      PVector p2d = new PVector();
-      
-        stroke(userClr[ (handId - 1) % userClr.length ]);
-        noFill(); 
-        strokeWeight(1);        
-        Iterator itrVec = vecList.iterator(); 
-         beginShape();
-          while( itrVec.hasNext() ) 
-          { 
-            p = (PVector) itrVec.next(); 
-            
-            context.convertRealWorldToProjective(p,p2d);
-            vertex(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
-          }
-        endShape();   
-  
-        stroke(userClr[ (handId - 1) % userClr.length ]);
-        strokeWeight(4);
-        p = vecList.get(0);
-        context.convertRealWorldToProjective(p,p2d);
-        
-         point(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
-        
-        posHand = p2d;
-        //context.convertRealWorldToProjective(p,posHand);
- 
-    }        
+    Map.Entry mapEntry = (Map.Entry)itr.next(); 
+    int handId =  (Integer)mapEntry.getKey();
+    ArrayList<PVector> vecList = (ArrayList<PVector>)mapEntry.getValue();
+    PVector p;
+    PVector p2d = new PVector();
+    
+    p2d = vecList.get(vecList.size()-1);
+    stroke(userClr[ (handId - 1) % userClr.length ]);
+    strokeWeight(4);
+    p = vecList.get(0);
+    context.convertRealWorldToProjective(p,p2d);
+    
+    point(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
+    hud.displayHand(new PVector(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y));//Display hud info 
+
+    posHand = p2d;
+    //context.convertRealWorldToProjective(p,posHand);
   }
 }
 
 int tocado=0;
  void update(){
    //TODOOOOOOOOOOOO: pasar de mouse a kinect controls
-     posHand = new PVector(mouseX, mouseY); //TODO:quitar esta linea
+    // posHand = new PVector(mouseX, mouseY); //TODO:quitar esta linea
      if (posHand!=null){                  
-        int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(posHand.x, posHand.y);//X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  //TODO: quitar este para aplicar la escala
+        int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  //TODO: quitar este para aplicar la escala
         if(indexCollidedButterfly>-1){
           tocado++;
-          if(butterfliesController.checkButterfliesCollision(/*X_SCALE_VALUE**/posHand.x,/* Y_SCALE_VALUE**/posHand.y)!=indexCollidedButterfly){//TODO: quitar este para aplicar la escala
+          if(butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y)!=indexCollidedButterfly){//TODO: quitar este para aplicar la escala
              tocado = 0;
            }else if(tocado>NUMBER_OF_TOUCHES_TO_FREE_BUTTERFLY){
              butterfliesController.freeButterflyWithIndex(indexCollidedButterfly);

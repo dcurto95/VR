@@ -35,18 +35,23 @@ class Hud {
     
   }
 
-  //Shows HUD image + punctuation + Time left + displays Hand
-  void display(PVector posHand) {
+  //Shows HUD image + punctuation + Time left 
+  void display() {
     pushMatrix();
     translate(width/2, height/2);
     image(hudImage, 0, 0);
     popMatrix();
     updateTime();  
     updateScores();
-    handSprite.setXY(posHand.x,posHand.y);
-    handSprite.draw();
+    
   }
 
+  void displayHand(PVector posHand){//displays Hand
+    if(posHand!=null){
+      handSprite.setXY(posHand.x,posHand.y);
+      handSprite.draw();
+    }
+  }
   void updateScores() {
     fill(255);      
     rectMode(CENTER);  
