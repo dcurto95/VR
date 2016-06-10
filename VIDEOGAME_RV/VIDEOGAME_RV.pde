@@ -14,7 +14,7 @@ final int MILLIS_TO_FREE_BUTTERFLY = 5000;
 final int NUMBER_OF_TOUCHES_TO_FREE_BUTTERFLY = 60;
 
 //Variables globales
-//FullScreen fs;
+FullScreen fs;
 Net net;
 Hud hud;
 Background background;
@@ -30,7 +30,7 @@ SimpleOpenNI  context;
 
 boolean handDetected; 
 //VAR CONTROL KINNECT
-int handVecListSize = 20;
+final int HAND_VEC_LIST_SIZE = 20;
 PVector posHand;
     boolean tocat;
 Map<Integer,ArrayList<PVector>>  handPathList = new HashMap<Integer,ArrayList<PVector>>();
@@ -46,8 +46,7 @@ float X_SCALE_VALUE, Y_SCALE_VALUE;
 void setup(){
   
   size(displayWidth, displayHeight); 
-  //fs = new Fullscreen(this);
-  //fs.enter();
+  
    handDetected = false;
   context = new SimpleOpenNI(this);
   if(context.isInit() == false)
@@ -60,7 +59,7 @@ void setup(){
   // enable depthMap generation 
   context.enableDepth();
   // enable skeleton generation for all joints
-  context.enableUser();
+ // context.enableUser();
  
   // disable mirror
   context.setMirror(true);
@@ -83,7 +82,7 @@ void setup(){
   // set how smooth the hand capturing should be
   //context.setSmoothingHands(.5);
     // Create the fullscreen object
- // fs = new FullScreen(this); 
+  fs = new FullScreen(this); 
   
   // enter fullscreen mode
 //  fs.enter();
@@ -103,7 +102,7 @@ void setup(){
 void draw(){
   
   background(255);
-  background.display();     //Displays background images
+ // background.display();     //Displays background images
   net.drawNet();            //Display spider net
  
   //KINNECT
@@ -203,10 +202,8 @@ int tocado=0;
 void tryToEatButterfly(){
   PVector dist;
   for (int n=0;n<butterfliesController.getNumberOfButterflies();n++){
-    println("Trying to eat ");
-    
+    //println("Trying to eat ");
     dist = PVector.sub(butterfliesController.getButterfly(n).location, PVector.add(spider.screenPosition, new PVector(width/2, (height+150)/2)));
-    println("Spider: "+spider.screenPosition + "Butterfly:"+butterfliesController.getButterfly(n).location);
     if(abs(dist.x)<10 && abs(dist.y)<10){
       butterfliesController.removeButterfly(n);
       hud.substractLifeBoy();
@@ -284,7 +281,7 @@ void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
   {
     vecList.add(0,pos);
     //println("log adso"+pos);
-    if(vecList.size() >= handVecListSize)
+    if(vecList.size() >= HAND_VEC_LIST_SIZE)
       // remove the last point 
       vecList.remove(vecList.size()-1); 
   }  

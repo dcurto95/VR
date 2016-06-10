@@ -18,9 +18,7 @@ class ButterfliesController{
 
           }else if(i<4){
               destPoint = net.getPointNet(i,j);  
-              println("size before="+butterflies.size());
               butterflies.add(new Butterfly(destPoint, thePApplet));
-              println("size after add="+butterflies.size());
               butterflies.get(numbut).selectButterfly((int) random(1,8));
               numbut++;
          }
