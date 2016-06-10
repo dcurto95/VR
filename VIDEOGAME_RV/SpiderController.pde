@@ -92,22 +92,20 @@ public class SpiderController{
     shoulderAngleR = degrees(PVector.angleBetween(vertical, PVector.sub(posRElbow,posRShoulder)));
     
     //Comprobar que los brazos estan abiertos (como en cruz con el cuerpo)
-    if(shoulderAngleL<120 && shoulderAngleL>60 && shoulderAngleR<120 && shoulderAngleL>60){
-//      println("Arms ok");
+    if(shoulderAngleL<110 && shoulderAngleL>70 && shoulderAngleR<110 && shoulderAngleL>70){
+      println("Arms ok");
       float elbowAngleL,elbowAngleR;
       elbowAngleL = degrees(PVector.angleBetween(posLShoulder, PVector.sub(posLHand,posLElbow)));
       elbowAngleR = degrees(PVector.angleBetween(posRShoulder, PVector.sub(posRHand,posRElbow)));
-      //Comprobar angulo del codo
-      if(elbowAngleL>60 && elbowAngleR>60 && elbowAngleL<120 && elbowAngleR<120 ){
-  //      println("BACK ");
-    //    spider.goToNextPointBackWards(); 
-      }else if(elbowAngleL<180 && elbowAngleL>120 && elbowAngleR<180 && elbowAngleR>120){
- //       println("FRONT ");
-        spider.goToNextPointForward();
-      }else{
- //       println("ELBOW angles: "+elbowAngleL+"    "+elbowAngleR);
+      //Comprobar si manos arriba
+  
+      PVector diffHands = PVector.sub(posLHand, posRHand);
+      PVector diffHandShoulderL = PVector.sub(posLHand, posLShoulder);
+      PVector diffHandShoulderR = PVector.sub(posRHand, posRShoulder);
+      println("Diff hands"+diffHands+ "diffL"+ diffHandShoulderL + "diffR"+ diffHandShoulderR);
+      if(abs(diffHands.y)<10 && (diffHandShoulderL.y<50 || (diffHandShoulderL.y<50))){
+          spider.goToNextPointForward();
       }
-    
     }else{
  //     println("Arms angles: "+shoulderAngleL+"    "+shoulderAngleR);
     }
@@ -119,7 +117,7 @@ public class SpiderController{
        
       //println("Shoulder diff:"+yDifferenceInShoulders);   
       if(rotating<0){  //Evita que lo compruebe en cada vuelta del draw -> sino la araña gira casi constantemente y es dificil pararla 
-        if(abs(yDifferenceInShoulders)>150){
+        if(abs(yDifferenceInShoulders)>120){
           if(yDifferenceInShoulders>0){
        //     println("Right");
             spider.turnRight();
