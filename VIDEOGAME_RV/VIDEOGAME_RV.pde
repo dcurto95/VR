@@ -24,6 +24,7 @@ ButterfliesController butterfliesController;
 
 int compte_segons;
 int nButterfliesInNet;
+boolean spiderPlayerReady, kidReady;
 
 //Kinect
 SimpleOpenNI  context;
@@ -58,16 +59,19 @@ void setup(){
   
   // enable depthMap generation 
   context.enableDepth();
-  // enable skeleton generation for all joints
+  
   context.enableUser();
+  context.enableHand();
+//  context.startGesture(SimpleOpenNI.GESTURE_WAVE);
+ 
+  
+  
  
   // disable mirror
   context.setMirror(true);
 // enable hands + gesture generation
   //context.enableGesture();
-  context.enableHand();
-  context.startGesture(SimpleOpenNI.GESTURE_WAVE);
- 
+  
   net = new Net(4);
   hud = new Hud(this);
   background = new Background();
@@ -85,7 +89,7 @@ void setup(){
   fs = new FullScreen(this); 
   
   // enter fullscreen mode
-  fs.enter();
+  //fs.enter();
   
   //registerMethod("keyEvent", this);
   //kinect 640 x 480
@@ -102,7 +106,10 @@ void setup(){
 void draw(){
   
   background(255);
-  background.display();     //Displays background images
+  if (fondo){
+    background.display();     //Displays background images
+  }
+  
   net.drawNet();            //Display spider net
  
   //KINNECT
@@ -110,7 +117,7 @@ void draw(){
   
   spiderController.checkSpiderControls();
   
-  update();
+  
  
   butterfliesController.displayButterflies();
 
@@ -130,8 +137,11 @@ void draw(){
   // draw the tracked hands
   if(handPathList.size() > 0)  
   {    
-    Iterator itr = handPathList.entrySet().iterator();     
-    Map.Entry mapEntry = (Map.Entry)itr.next(); 
+    Iterator itr = handPathList.entrySet().iterator(); 
+    Map.Entry mapEntry = null;
+    while(itr.hasNext()){    
+      mapEntry = (Map.Entry)itr.next(); 
+    }
     int handId =  (Integer)mapEntry.getKey();
     ArrayList<PVector> vecList = (ArrayList<PVector>)mapEntry.getValue();
     PVector p;
@@ -149,17 +159,17 @@ void draw(){
     posHand = p2d;
     //context.convertRealWorldToProjective(p,posHand);
   }
+  
+  update();
 }
 
 int tocado=0;
  void update(){
-   //TODOOOOOOOOOOOO: pasar de mouse a kinect controls
-    // posHand = new PVector(mouseX, mouseY); //TODO:quitar esta linea
      if (posHand!=null){                  
-        int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  //TODO: quitar este para aplicar la escala
+        int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  
         if(indexCollidedButterfly>-1){
           tocado++;
-          if(butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y)!=indexCollidedButterfly){//TODO: quitar este para aplicar la escala
+          if(butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y)!=indexCollidedButterfly){
              tocado = 0;
            }else if(tocado>NUMBER_OF_TOUCHES_TO_FREE_BUTTERFLY){
              butterfliesController.freeButterflyWithIndex(indexCollidedButterfly);
@@ -171,20 +181,8 @@ int tocado=0;
        }
      }
        
-     /*
-    for (int n=0;n<NBR_BUTTERFLY;n++){
-     // println(hud.handSprite.getX()+ ","+ hud.handSprite.getY());
-     // println("POSBUT: "+n+":"+butterfliesController.butterflies[n].butterflySprite.getX()+ ","+ butterfliesController.butterflies[n].butterflySprite.getY());
-    
-      if(butterfliesController.butterflies[n].butterflySprite.bb_collision(hud.handSprite)){
-        tocado++;
-        if(tocado>100){
-          butterfliesController.butterflies[n].freeButterfly();
-          net.hidePointWithScreenPosition(new PVector((float)butterfliesController.butterflies[n].cocoonSprite.getX(),(float)butterfliesController.butterflies[n].cocoonSprite.getY()));
-        }
-      }
-    }*/
-    tryToEatButterfly();
+
+   tryToEatButterfly();
  }
 
 void tryToEatButterfly(){
@@ -200,11 +198,14 @@ void tryToEatButterfly(){
   }
 }
 
+boolean fondo = false;
 //Mouse click control
 void mouseClicked() {
  print("info: MOUSE PRESSED\n");
  println("info: COORDINATES [" + mouseX + "," + mouseY + "]");
  initGame();
+ fondo = !fondo;
+ 
 }
 
 
@@ -232,12 +233,20 @@ void onNewUser(SimpleOpenNI curContext, int userId)
     println("\tstart tracking skeleton");
     if(spiderController.userList!= null && spiderController.userList.length==0){
       context.startTrackingSkeleton(userId);
+      spiderPlayerReady = true;
     }
+    /*if(spiderController.userList!= null && spiderController.userList.length==1){
+      println("Activate");
+      delay(5000);
+      context.startGesture(SimpleOpenNI.GESTURE_WAVE);
+      spiderPlayerReady = true;
+    }*/
   }
   
 void onLostUser(SimpleOpenNI curContext, int userId)
 {
   println("onLostUser - userId: " + userId);
+  spiderPlayerReady = false;
 }
 
 void onVisibleUser(SimpleOpenNI curContext, int userId)
@@ -257,7 +266,10 @@ void onNewHand(SimpleOpenNI curContext,int handId,PVector pos)
     
     handPathList.put(handId,vecList);
     handDetected = true;
+    kidReady = true;
   }
+  
+ 
 }
 
 void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
@@ -280,6 +292,7 @@ void onLostHand(SimpleOpenNI curContext,int handId)
   println("onLostHand - handId: " + handId);
   handPathList.remove(handId);
   handDetected = false;
+  kidReady = false;
 }
 
 // -----------------------------------------------------------------
