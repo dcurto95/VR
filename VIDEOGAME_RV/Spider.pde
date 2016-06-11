@@ -36,7 +36,7 @@ public class Spider{
   
   public void turnLeft(){
     if(!isMoving){
-      //println("lf");
+      println("lf");
       angle = angle + PI/2;//90;
       direction = new PVector(sin(/*radians(*/angle/*)*/), cos(/*radians(*/angle/*)*/));
       if(abs(direction.x)<0.5) direction.x=0;
@@ -46,14 +46,14 @@ public class Spider{
       if(direction.y>0.5) direction.y=1;
       if(direction.y<-0.5) direction.y=-1;
       
-   //   println("Dir: "+direction);
+      println("Dir: "+direction);
 
     }
   }
   
   public void turnRight(){
     if(!isMoving){
-   //   println("righ");
+      println("righ");
       angle = angle - PI/2;
       direction = new PVector(sin(angle), cos(angle));
     if(abs(direction.x)<0.1) direction.x=0;
@@ -62,7 +62,7 @@ public class Spider{
     if(direction.x<-0.5) direction.x=-1;
     if(direction.y>0.5) direction.y=1;
     if(direction.y<-0.5) direction.y=-1;
-  //  println("Dir: "+direction);
+    println("Dir: "+direction);
 
     }
   }
@@ -72,7 +72,11 @@ public class Spider{
       if((PVector.sub(screenPosition, screenDestination)).mag() > 1){
         PVector sub = PVector.sub(screenDestination, screenPosition);
         sub.normalize();
-        sub.mult(1.5);
+        if(PVector.sub(screenPosition, screenDestination).mag()>3){
+          sub.mult(3);
+        }else{
+          sub.mult(1.8);
+        }
         screenPosition.add(sub);
         S4P.updateSprites(0.9f);      
       }else{
@@ -163,6 +167,7 @@ public class Spider{
        PVector dest = PVector.sub(screenDestination,screenPosition);
        angleInScreen = degrees(dest.heading());   
     }
+ //   println("anngle In screen:"+angleInScreen);
     pushMatrix();
 
    // println("Angle Spider: "+angle);

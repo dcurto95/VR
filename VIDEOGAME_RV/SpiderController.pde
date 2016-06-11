@@ -93,7 +93,7 @@ public class SpiderController{
     
     //Comprobar que los brazos estan abiertos (como en cruz con el cuerpo)
     if(shoulderAngleL<110 && shoulderAngleL>70 && shoulderAngleR<110 && shoulderAngleL>70){
-      println("Arms ok");
+      //println("Arms ok");
       float elbowAngleL,elbowAngleR;
       elbowAngleL = degrees(PVector.angleBetween(posLShoulder, PVector.sub(posLHand,posLElbow)));
       elbowAngleR = degrees(PVector.angleBetween(posRShoulder, PVector.sub(posRHand,posRElbow)));
@@ -102,7 +102,7 @@ public class SpiderController{
       PVector diffHands = PVector.sub(posLHand, posRHand);
       PVector diffHandShoulderL = PVector.sub(posLHand, posLShoulder);
       PVector diffHandShoulderR = PVector.sub(posRHand, posRShoulder);
-      println("Diff hands"+diffHands+ "diffL"+ diffHandShoulderL + "diffR"+ diffHandShoulderR);
+     // println("Diff hands"+diffHands+ "diffL"+ diffHandShoulderL + "diffR"+ diffHandShoulderR);
       if(abs(diffHands.y)<10 && (diffHandShoulderL.y<50 || (diffHandShoulderL.y<50))){
           spider.goToNextPointForward();
       }
@@ -129,32 +129,54 @@ public class SpiderController{
         }
         
       }
+      
   }
   
   void checkSpiderControls(){
     rotating=rotating-1;
-  
+  //  println("El valor de rotating es " + rotating);
+    if(rotating<-10) rotating = 20;
     userList = context.getUsers();
     for(int i=0;i<userList.length;i++)
     {
       if(context.isTrackingSkeleton(userList[i]))
       {
-        //Pintar esqueleto para saber lo que esta captando
-        stroke(userClr);
-        drawSkeleton(userList[i]);
-        int confidence = getJointPositions(i);
+        if(i==0){
+          //Pintar esqueleto para saber lo que esta captando
+          stroke(userClr);
+          drawSkeleton(userList[i]);
+          int confidence = getJointPositions(i);
+          
+          float yDifferenceInShoulders = posLShoulder.y - posRShoulder.y;
         
-        float yDifferenceInShoulders = posLShoulder.y - posRShoulder.y;
-      
-        convertCoordinatesTo2D();
-        
-        if(confidence>0){
-          checkRotation(yDifferenceInShoulders);
+          convertCoordinatesTo2D();
+          
+          if(confidence>0){
+            checkRotation(yDifferenceInShoulders);
+          }else{
+            rotating = 20;
+          }
+          if(confidence==2){
+            checkMoving();
+          }
+        }else{
+          ArrayList<PVector> vecList = handPathList.get(i+1);
+          drawSkeleton(userList[i]);
+         
+          if(vecList != null)
+          {
+           
+            
+          
+            PVector pos = new PVector(0,0,0);
+            context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HAND,pos);
+            vecList.add(0,pos);
+            //println("log adso"+pos);
+            if(vecList.size() >= HAND_VEC_LIST_SIZE)
+              // remove the last point 
+              vecList.remove(vecList.size()-1); 
+          }  
         }
-        if(confidence==2){
-          checkMoving();
-        }
-        
       }
     }
   }

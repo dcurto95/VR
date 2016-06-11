@@ -147,16 +147,20 @@ void draw(){
     PVector p;
     PVector p2d = new PVector();
     
-    p2d = vecList.get(vecList.size()-1);
+    if(vecList.size()>1){
+      p2d = vecList.get(vecList.size()-1);
+    }
     stroke(userClr[ (handId - 1) % userClr.length ]);
     strokeWeight(4);
-    p = vecList.get(0);
-    context.convertRealWorldToProjective(p,p2d);
-    
-    point(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
-    hud.displayHand(new PVector(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y));//Display hud info 
-
-    posHand = p2d;
+    if(vecList.size()>0) {
+      p = vecList.get(0);
+      context.convertRealWorldToProjective(p,p2d);
+      
+      point(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
+      hud.displayHand(new PVector(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y));//Display hud info 
+  
+      posHand = p2d;
+    }
     //context.convertRealWorldToProjective(p,posHand);
   }
   
@@ -235,12 +239,16 @@ void onNewUser(SimpleOpenNI curContext, int userId)
       context.startTrackingSkeleton(userId);
       spiderPlayerReady = true;
     }
-    /*if(spiderController.userList!= null && spiderController.userList.length==1){
+    if(spiderController.userList!= null && spiderController.userList.length==1){
       println("Activate");
-      delay(5000);
-      context.startGesture(SimpleOpenNI.GESTURE_WAVE);
+      context.startTrackingSkeleton(userId);
+    //  delay(5000);
+   //   context.startGesture(SimpleOpenNI.GESTURE_WAVE);
       spiderPlayerReady = true;
-    }*/
+       ArrayList<PVector> vecList = new ArrayList<PVector>();
+    vecList.add(0,new PVector(0,0,0));
+    handPathList.put(userId,vecList);
+    }
   }
   
 void onLostUser(SimpleOpenNI curContext, int userId)
@@ -251,7 +259,7 @@ void onLostUser(SimpleOpenNI curContext, int userId)
 
 void onVisibleUser(SimpleOpenNI curContext, int userId)
 {
-  println("onVisibleUser - userId: " + userId);
+  //println("onVisibleUser - userId: " + userId);
 }
 
 // -----------------------------------------------------------------
