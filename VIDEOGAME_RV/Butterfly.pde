@@ -28,7 +28,7 @@ class Butterfly{
     flagPapallona_engaged = false;
     pointDst = new PVector();
     pointDst.x = width/2 - pointDest.x;
-    pointDst.y = (height+150)/2 - pointDest.y; 
+    pointDst.y = (height)/2 - pointDest.y; 
     butterflySprite = new Sprite(thePApplet, "images/butterfly.png", 12, 8, 21);
     butterflySprite.setScale(4);
     cocoonSprite = new Sprite(thePApplet, "images/Cocoon.png",1, 1, 21);

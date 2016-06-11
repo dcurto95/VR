@@ -56,7 +56,7 @@ public class Net{
   
   void hidePointWithScreenPosition(PVector position){
     PVector dist;
-    position.sub(new PVector(width/2, (height+150)/2));
+    position.sub(new PVector(width/2, (height)/2));
     for(int i=0;i<=nRings;i++){
       for(int j=0;j<8;j++){
         dist = PVector.sub(getNetPoint(i,j).position, position);
@@ -100,7 +100,7 @@ public class Net{
           
           pushMatrix();
           
-          translate(width/2, (height+150)/2);
+          translate(width/2, (height)/2);
           
           fill(255);
           ellipse(p.position.x,p.position.y,15,15);
@@ -119,7 +119,7 @@ public class Net{
             }
             
             pushMatrix();
-            translate(width/2, (height+150)/2);
+            translate(width/2, (height)/2);
             stroke(255);
             strokeWeight(3);
             if (pPrev != null && pPrev.type=='E') line(pPrev.position.x,pPrev.position.y,p.position.x,p.position.y);

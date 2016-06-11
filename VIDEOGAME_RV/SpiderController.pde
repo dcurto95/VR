@@ -16,7 +16,7 @@ public class SpiderController{
     posRShoulder = new PVector();
     posRElbow = new PVector();
     posLElbow = new PVector();
-    
+    userList = context.getUsers();
   }
   
   // -----------------------------------------------------------------
@@ -71,6 +71,7 @@ public class SpiderController{
       shoulderFiability = context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER,posRShoulder);
       if(shoulderFiability<MIN_FIABILITY){return 0;}
       if(otherJointsKO){return 1;}
+      
       return 2;//Todo OK
   }
   
@@ -159,6 +160,9 @@ public class SpiderController{
           if(confidence==2){
             checkMoving();
           }
+          
+          
+          
         }else{
           ArrayList<PVector> vecList = handPathList.get(i+1);
           drawSkeleton(userList[i]);
@@ -169,7 +173,7 @@ public class SpiderController{
             
           
             PVector pos = new PVector(0,0,0);
-            context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HAND,pos);
+            context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND,pos);
             vecList.add(0,pos);
             //println("log adso"+pos);
             if(vecList.size() >= HAND_VEC_LIST_SIZE)

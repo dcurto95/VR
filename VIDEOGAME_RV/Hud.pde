@@ -31,7 +31,7 @@ class Hud {
     hudImage.resize(W, H);
     startTime = (millis() / 1000) + COUNT_DOWN_TIME;
     
-    handSprite = new Sprite(thePApplet, "images/HandSprite.png", 1, 1, 21);
+    handSprite = new Sprite(thePApplet, "images/HandSprite2.png", 1, 1, 21);
     
   }
 
