@@ -258,7 +258,7 @@ void mouseClicked() {
 void initGame(){
   hud.startTimer();
   compte_segons = hud.seconds;
-  println("segons"+ compte_segons);
+  //println("segons"+ compte_segons);
   gameReady = true;
 }
 
@@ -299,6 +299,7 @@ void onLostUser(SimpleOpenNI curContext, int userId)
       
   //context.stopTrackingSkeleton(userId);
   //spiderPlayerReady = false;
+  if(spiderId == userId) spiderId = 0;
 }
 
 void onVisibleUser(SimpleOpenNI curContext, int userId)
