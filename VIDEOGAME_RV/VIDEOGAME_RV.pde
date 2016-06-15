@@ -13,6 +13,8 @@ final int N_MAX_BUTTERFLIES_IN_NET = 3;
 final int MILLIS_TO_FREE_BUTTERFLY = 5000;
 final int NUMBER_OF_TOUCHES_TO_FREE_BUTTERFLY = 60;
 
+int spiderId;
+
 //Variables globales
 FullScreen fs;
 Net net;
@@ -61,7 +63,7 @@ void setup(){
   context.enableDepth();
     context.enableHand();
   context.startGesture(SimpleOpenNI.GESTURE_WAVE);
-  //context.enableUser();
+  context.enableUser();
   
  
   // disable mirror
@@ -102,16 +104,17 @@ void setup(){
 //Draw function
 void draw(){
   //KINNECT
+    //image(context.depthImage(),0,0);
     context.update();
     spiderController.userList = context.getUsers();
-      update();
+    update();
       
     if(gameReady && spiderPlayerReady && kidReady){
       background(255);
    //   if (fondo){
       background.display();     //Displays background images
    //   }
-      
+     
       net.drawNet();            //Display spider net
      
       
@@ -166,6 +169,7 @@ void draw(){
     
     //update();
   }else{
+    
     println("sp: "+spiderPlayerReady+" kid: "+kidReady + " game: "+gameReady);
     if(spiderPlayerReady && !kidReady){
       println("Spider ready");
@@ -173,6 +177,10 @@ void draw(){
       PImage calibration = loadImage("images/spider_ready.png");
       calibration.resize(width, height);
       image(calibration, 0, 0);
+      
+      delay(2000);
+      kidReady = true;
+      
       
     }else if(kidReady){
       println("kid ready");
@@ -192,6 +200,7 @@ void draw(){
 
 int tocado=0;
  void update(){
+     println("segons"+ compte_segons);
      if (posHand!=null){                  
         int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  
         if(indexCollidedButterfly>-1){
@@ -249,6 +258,7 @@ void mouseClicked() {
 void initGame(){
   hud.startTimer();
   compte_segons = hud.seconds;
+  //println("segons"+ compte_segons);
   gameReady = true;
 }
 
@@ -273,20 +283,28 @@ void onNewUser(SimpleOpenNI curContext, int userId)
       context.startTrackingSkeleton(userId);
       println("Antes de ready");
       spiderPlayerReady = true;
+      //kidReady = true;
        println("Despues de ready");
+       spiderId=userId;
     }
+      /*if(spiderController.userList!= null && spiderController.userList.length==1){
+       kidReady = true;
+     }*/
    
   }
   
 void onLostUser(SimpleOpenNI curContext, int userId)
 {
   println("onLostUser - userId: " + userId);
-  
+      
+  //context.stopTrackingSkeleton(userId);
+  //spiderPlayerReady = false;
+  if(spiderId == userId) spiderId = 0;
 }
 
 void onVisibleUser(SimpleOpenNI curContext, int userId)
 {
-  //println("onVisibleUser - userId: " + userId);
+  println("onVisibleUser - userId: " + userId);
 }
 
 
