@@ -177,9 +177,9 @@ void draw(){
       PImage calibration = loadImage("images/spider_ready.png");
       calibration.resize(width, height);
       image(calibration, 0, 0);
-      
-      delay(2000);
-      kidReady = true;
+            kidReady = true;
+      //delay(2000);
+
       
       
     }else if(kidReady){
@@ -200,7 +200,7 @@ void draw(){
 
 int tocado=0;
  void update(){
-     println("segons"+ compte_segons);
+     //println("segons"+ compte_segons);
      if (posHand!=null){                  
         int indexCollidedButterfly = butterfliesController.checkButterfliesCollision(X_SCALE_VALUE*posHand.x, Y_SCALE_VALUE*posHand.y);  
         if(indexCollidedButterfly>-1){
@@ -285,7 +285,7 @@ void onNewUser(SimpleOpenNI curContext, int userId)
       spiderPlayerReady = true;
       //kidReady = true;
        println("Despues de ready");
-       spiderId=userId;
+       //spiderId=userId;
     }
       /*if(spiderController.userList!= null && spiderController.userList.length==1){
        kidReady = true;
@@ -299,7 +299,7 @@ void onLostUser(SimpleOpenNI curContext, int userId)
       
   //context.stopTrackingSkeleton(userId);
   //spiderPlayerReady = false;
-  if(spiderId == userId) spiderId = 0;
+  //if(spiderId == userId) spiderId = 0;
 }
 
 void onVisibleUser(SimpleOpenNI curContext, int userId)

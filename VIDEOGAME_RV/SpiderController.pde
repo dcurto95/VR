@@ -143,8 +143,8 @@ public class SpiderController{
       
       if(context.isTrackingSkeleton(userList[i]))
       {
-        //if(i == 0){
-        if(spiderId>0 && userList[i]==spiderId){
+        if(i == 0){
+        //if(spiderId>0 && userList[i]==spiderId){
           //Pintar esqueleto para saber lo que esta captando
           stroke(userClr);
           drawSkeleton(userList[i]);
