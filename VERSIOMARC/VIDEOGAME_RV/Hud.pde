@@ -12,10 +12,7 @@ class Hud {
   int lifesBoy;
   boolean isStopped;
   int seconds;
-  int startTime;
-  
-  //Hand Image
-  Sprite handSprite;
+  int startTime = 0;
 
   //Hud Image
   PImage hudImage;
@@ -29,13 +26,10 @@ class Hud {
     //Load HUD image
     hudImage = loadImage("images/hud.png");
     hudImage.resize(W, H);
-    startTime = (millis() / 1000) + COUNT_DOWN_TIME;
-    
-    handSprite = new Sprite(thePApplet, "images/HandSprite2.png", 1, 1, 21);
     
   }
 
-  //Shows HUD image + punctuation + Time left 
+  //Shows HUD image + punctuation + Time left
   void display() {
     pushMatrix();
     translate(width/2, height/2);
@@ -43,15 +37,8 @@ class Hud {
     popMatrix();
     updateTime();  
     updateScores();
-    
   }
 
-  void displayHand(PVector posHand){//displays Hand
-    if(posHand!=null){
-      handSprite.setXY(posHand.x,posHand.y);
-      handSprite.draw();
-    }
-  }
   void updateScores() {
     fill(255);      
     rectMode(CENTER);  
@@ -69,7 +56,7 @@ class Hud {
   }
 
   void showGameOver() {
-    seconds = COUNT_DOWN_TIME;
+    seconds = 0;
     textSize(50); fill(0);
     if (lifesBoy>lifesSpider) text("TIME OVER: BUTT WINS", W/2 -220, H/2+200);
     else  text("TIME OVER: SPIDER WINS", W/2 -220, H/2+200);
@@ -87,7 +74,7 @@ class Hud {
   //Refresh and shows the timer information
   void updateTime() {  
     if (!isStopped) {
-      if (seconds < 1 || lifesSpider == 0 || lifesBoy == 0) {
+      if (seconds < 0 || seconds == 0 || lifesSpider == 0 || lifesBoy == 0) {
         showGameOver();
       }
       if (seconds > 0) {               

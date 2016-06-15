@@ -16,10 +16,10 @@ public class SpiderController{
     posRShoulder = new PVector();
     posRElbow = new PVector();
     posLElbow = new PVector();
-    userList = context.getUsers();
+    
   }
   
-  // -----------------------------------------------------------------
+    // -----------------------------------------------------------------
   // SimpleOpenNI events
   
   
@@ -71,7 +71,6 @@ public class SpiderController{
       shoulderFiability = context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER,posRShoulder);
       if(shoulderFiability<MIN_FIABILITY){return 0;}
       if(otherJointsKO){return 1;}
-      
       return 2;//Todo OK
   }
   
@@ -93,20 +92,22 @@ public class SpiderController{
     shoulderAngleR = degrees(PVector.angleBetween(vertical, PVector.sub(posRElbow,posRShoulder)));
     
     //Comprobar que los brazos estan abiertos (como en cruz con el cuerpo)
-    if(shoulderAngleL<110 && shoulderAngleL>70 && shoulderAngleR<110 && shoulderAngleL>70){
-      //println("Arms ok");
+    if(shoulderAngleL<120 && shoulderAngleL>60 && shoulderAngleR<120 && shoulderAngleL>60){
+//      println("Arms ok");
       float elbowAngleL,elbowAngleR;
       elbowAngleL = degrees(PVector.angleBetween(posLShoulder, PVector.sub(posLHand,posLElbow)));
       elbowAngleR = degrees(PVector.angleBetween(posRShoulder, PVector.sub(posRHand,posRElbow)));
-      //Comprobar si manos arriba
-  
-      PVector diffHands = PVector.sub(posLHand, posRHand);
-      PVector diffHandShoulderL = PVector.sub(posLHand, posLShoulder);
-      PVector diffHandShoulderR = PVector.sub(posRHand, posRShoulder);
-     // println("Diff hands"+diffHands+ "diffL"+ diffHandShoulderL + "diffR"+ diffHandShoulderR);
-      if(abs(diffHands.y)<10 && (diffHandShoulderL.y<50 || (diffHandShoulderL.y<50))){
-          spider.goToNextPointForward();
+      //Comprobar angulo del codo
+      if(elbowAngleL>60 && elbowAngleR>60 && elbowAngleL<120 && elbowAngleR<120 ){
+  //      println("BACK ");
+    //    spider.goToNextPointBackWards(); 
+      }else if(elbowAngleL<180 && elbowAngleL>120 && elbowAngleR<180 && elbowAngleR>120){
+ //       println("FRONT ");
+        spider.goToNextPointForward();
+      }else{
+ //       println("ELBOW angles: "+elbowAngleL+"    "+elbowAngleR);
       }
+    
     }else{
  //     println("Arms angles: "+shoulderAngleL+"    "+shoulderAngleR);
     }
@@ -118,7 +119,7 @@ public class SpiderController{
        
       //println("Shoulder diff:"+yDifferenceInShoulders);   
       if(rotating<0){  //Evita que lo compruebe en cada vuelta del draw -> sino la araña gira casi constantemente y es dificil pararla 
-        if(abs(yDifferenceInShoulders)>120){
+        if(abs(yDifferenceInShoulders)>150){
           if(yDifferenceInShoulders>0){
        //     println("Right");
             spider.turnRight();
@@ -130,57 +131,32 @@ public class SpiderController{
         }
         
       }
-      
   }
   
   void checkSpiderControls(){
     rotating=rotating-1;
-  //  println("El valor de rotating es " + rotating);
-    if(rotating<-10) rotating = 20;
+  
     userList = context.getUsers();
     for(int i=0;i<userList.length;i++)
     {
       if(context.isTrackingSkeleton(userList[i]))
       {
-        if(i==0){
-          //Pintar esqueleto para saber lo que esta captando
-          stroke(userClr);
-          drawSkeleton(userList[i]);
-          int confidence = getJointPositions(i);
-          
-          float yDifferenceInShoulders = posLShoulder.y - posRShoulder.y;
+        //Pintar esqueleto para saber lo que esta captando
+        stroke(userClr);
+        drawSkeleton(userList[i]);
+        int confidence = getJointPositions(i);
         
-          convertCoordinatesTo2D();
-          
-          if(confidence>0){
-            checkRotation(yDifferenceInShoulders);
-          }else{
-            rotating = 20;
-          }
-          if(confidence==2){
-            checkMoving();
-          }
-          
-          
-          
-        }/*else{
-          ArrayList<PVector> vecList = handPathList.get(i+1);
-          drawSkeleton(userList[i]);
-         
-          if(vecList != null)
-          {
-           
-            
-          
-            PVector pos = new PVector(0,0,0);
-            context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND,pos);
-            vecList.add(0,pos);
-            //println("log adso"+pos);
-            if(vecList.size() >= HAND_VEC_LIST_SIZE)
-              // remove the last point 
-              vecList.remove(vecList.size()-1); 
-          }  
-        }*/
+        float yDifferenceInShoulders = posLShoulder.y - posRShoulder.y;
+      
+        convertCoordinatesTo2D();
+        
+        if(confidence>0){
+          checkRotation(yDifferenceInShoulders);
+        }
+        if(confidence==2){
+          checkMoving();
+        }
+        
       }
     }
   }
