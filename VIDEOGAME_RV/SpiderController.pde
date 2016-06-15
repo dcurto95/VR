@@ -165,7 +165,7 @@ public class SpiderController{
           
           
           
-        }/*else{
+        }else{
           ArrayList<PVector> vecList = handPathList.get(i+1);
           drawSkeleton(userList[i]);
          
@@ -182,7 +182,7 @@ public class SpiderController{
               // remove the last point 
               vecList.remove(vecList.size()-1); 
           }  
-        }*/
+        }
       }
     }
   }

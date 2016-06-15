@@ -50,27 +50,26 @@ void setup(){
   
   size(displayWidth, displayHeight); 
   
-   //handDetected = false;
+   handDetected = false;
   context = new SimpleOpenNI(this);
   if(context.isInit() == false)
   {
      println("Can't init SimpleOpenNI, maybe the camera is not connected!"); 
- exit();
-     return;  
+ //    exit();
+  //   return;  
   }
   
   // enable depthMap generation 
   context.enableDepth();
+
     context.enableHand();
-  context.startGesture(SimpleOpenNI.GESTURE_WAVE);
+
   context.enableUser();
   
  
   // disable mirror
   context.setMirror(true);
   
-
- 
   net = new Net(4);
   hud = new Hud(this);
   background = new Background();
@@ -93,8 +92,8 @@ void setup(){
   //registerMethod("keyEvent", this);
   //kinect 640 x 480
   // pantalla width x height
-  X_SCALE_VALUE = (float)(displayWidth) / (float)(640);
-  Y_SCALE_VALUE = (float)(displayHeight) / (float)(480);
+  X_SCALE_VALUE = (float)(displayWidth) / (float)(650);
+  Y_SCALE_VALUE = (float)(displayHeight) / (float)(650);
         //hud.startTimer();
         
    nButterfliesInNet = 0;     
@@ -107,8 +106,12 @@ void draw(){
     //image(context.depthImage(),0,0);
     context.update();
     spiderController.userList = context.getUsers();
+
     update();
       
+
+    
+
     if(gameReady && spiderPlayerReady && kidReady){
       background(255);
    //   if (fondo){
@@ -167,7 +170,7 @@ void draw(){
         //context.convertRealWorldToProjective(p,posHand);
     }
     
-    //update();
+    update();
   }else{
     
     println("sp: "+spiderPlayerReady+" kid: "+kidReady + " game: "+gameReady);
@@ -287,10 +290,18 @@ void onNewUser(SimpleOpenNI curContext, int userId)
        println("Despues de ready");
        //spiderId=userId;
     }
-      /*if(spiderController.userList!= null && spiderController.userList.length==1){
-       kidReady = true;
-     }*/
-   
+
+    if(spiderController.userList!= null && spiderController.userList.length==1){
+      println("Activate");
+      context.startTrackingSkeleton(userId);
+      
+  
+      kidReady = true;
+      ArrayList<PVector> vecList = new ArrayList<PVector>();
+      vecList.add(0,new PVector(0,0,0));
+      handPathList.put(userId,vecList);
+    }
+
   }
   
 void onLostUser(SimpleOpenNI curContext, int userId)
@@ -308,54 +319,5 @@ void onVisibleUser(SimpleOpenNI curContext, int userId)
 }
 
 
-// -----------------------------------------------------------------
-// hand events
-
-void onNewHand(SimpleOpenNI curContext,int handId,PVector pos)
-{
-  println("onNewHand - handId: " + handId + ", pos: " + pos);
- 
-  ArrayList<PVector> vecList = new ArrayList<PVector>();
-  vecList.add(pos);
-  
-  handPathList.put(handId,vecList);
-}
-
-void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
-{
-  //println("onTrackedHand - handId: " + handId + ", pos: " + pos );
-  
-  ArrayList<PVector> vecList = handPathList.get(handId);
-  if(vecList != null)
-  {
-    vecList.add(0,pos);
-    if(vecList.size() >= HAND_VEC_LIST_SIZE)
-      // remove the last point 
-      vecList.remove(vecList.size()-1); 
-  }  
-  
-
-  
-  
-}
-
-void onLostHand(SimpleOpenNI curContext,int handId)
-{
-  println("onLostHand - handId: " + handId);
-  handPathList.remove(handId);
-}
-
-// -----------------------------------------------------------------
-// gesture events
-
-void onCompletedGesture(SimpleOpenNI curContext,int gestureType, PVector pos)
-{
-  println("onCompletedGesture - gestureType: " + gestureType + ", pos: " + pos);
-  
-  int handId = context.startTrackingHand(pos);
-  println("hand stracked: " + handId);
-  kidReady = true;
-      
-}
 
 
