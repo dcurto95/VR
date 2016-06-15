@@ -69,7 +69,7 @@ class Hud {
   }
 
   void showGameOver() {
-    seconds = COUNT_DOWN_TIME;
+    seconds = 0;
     textSize(50); fill(0);
     if (lifesBoy>lifesSpider) text("TIME OVER: BUTT WINS", W/2 -220, H/2+200);
     else  text("TIME OVER: SPIDER WINS", W/2 -220, H/2+200);
@@ -81,6 +81,7 @@ class Hud {
   void startTimer() {
     isStopped = false;
     startTime = (millis() / 1000) + COUNT_DOWN_TIME;
+    seconds = startTime;
     println("startime: "+ System.currentTimeMillis() % 1000 + " "+ COUNT_DOWN_TIME+" "+startTime + " " +millis());
   }
 
