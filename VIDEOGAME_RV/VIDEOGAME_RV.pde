@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Iterator;
 
 import SimpleOpenNI.*;
-
+//joer
 //Constantes
 final int NBR_BUTTERFLY = 24;
 final int N_MAX_BUTTERFLIES_IN_NET = 3;
