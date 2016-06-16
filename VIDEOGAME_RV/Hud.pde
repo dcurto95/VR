@@ -1,8 +1,10 @@
 class Hud {
 
   //Constants
-  final int COUNT_DOWN_TIME = 100;   //in seconds 
-  final int INITIAL_LIFE = 10;      //in seconds 
+  final int COUNT_DOWN_TIME = 300;   //in seconds 
+  final int INITIAL_LIFE_SPIDER = 20;      
+  final int INITIAL_LIFE_KID = 10;
+  
   final int MAX_LIFES = 10; 
   final int W = width;
   final int H = height;
@@ -22,8 +24,8 @@ class Hud {
 
   //Constructor
   Hud( PApplet thePApplet) {
-    lifesSpider = INITIAL_LIFE;
-    lifesBoy = INITIAL_LIFE;
+    lifesSpider = INITIAL_LIFE_SPIDER;
+    lifesBoy = INITIAL_LIFE_KID;
     isStopped = true;
 
     //Load HUD image
@@ -63,8 +65,8 @@ class Hud {
   //Resets the timer countdown
   void resetAll() {
     isStopped = true;
-    lifesSpider = INITIAL_LIFE;
-    lifesBoy = INITIAL_LIFE;
+    lifesSpider = INITIAL_LIFE_SPIDER;
+    lifesBoy = INITIAL_LIFE_KID;
     seconds = COUNT_DOWN_TIME;
   }
 
