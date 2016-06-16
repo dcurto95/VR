@@ -23,19 +23,26 @@ Background background;
 Spider spider;
 SpiderController spiderController;
 ButterfliesController butterfliesController;
+MusicController musicController;
 
 int compte_segons;
 int nButterfliesInNet;
-boolean spiderPlayerReady, kidReady, gameReady;
+boolean spiderPlayerReady, kidReady, gameReady, gameOver;
 
 //Kinect
 SimpleOpenNI  context;
+
+//KInnect video resize
+int[] userMap;
+PImage rgbImage;
+PImage userImage;
+
 
 boolean handDetected; 
 //VAR CONTROL KINNECT
 final int HAND_VEC_LIST_SIZE = 20;
 PVector posHand, posHandToDraw;
-    boolean tocat;
+    boolean tocat, skeleton;
 Map<Integer,ArrayList<PVector>>  handPathList = new HashMap<Integer,ArrayList<PVector>>();
 color[]       userClr = new color[]{ color(255,0,0),
                                      color(0,255,0),
@@ -49,23 +56,24 @@ float X_SCALE_VALUE, Y_SCALE_VALUE;
 void setup(){
   
   size(displayWidth, displayHeight); 
-  
-   handDetected = false;
+   //handDetected = false;
   context = new SimpleOpenNI(this);
   if(context.isInit() == false)
   {
      println("Can't init SimpleOpenNI, maybe the camera is not connected!"); 
- //    exit();
-  //   return;  
+     exit();
+     return;  
   }
   
   // enable depthMap generation 
   context.enableDepth();
+  context.enableRGB();
 
-    context.enableHand();
-
+  context.enableHand();
+  context.startGesture(SimpleOpenNI.GESTURE_WAVE);
   context.enableUser();
   
+  userImage = createImage(width, height, RGB);
  
   // disable mirror
   context.setMirror(true);
@@ -87,7 +95,7 @@ void setup(){
   fs = new FullScreen(this); 
   
   // enter fullscreen mode
-  //fs.enter();
+  fs.enter();
   
   //registerMethod("keyEvent", this);
   //kinect 640 x 480
@@ -96,7 +104,9 @@ void setup(){
   Y_SCALE_VALUE = (float)(displayHeight) / (float)(480);
         //hud.startTimer();
         
-   nButterfliesInNet = 0;     
+   nButterfliesInNet = 0; 
+
+  musicController = new MusicController(this);   
 }
 
 
@@ -109,96 +119,99 @@ void draw(){
 
     update();
       
-
+  if(!gameOver){
     
 
-    if(gameReady && spiderPlayerReady && kidReady){
-      background(255);
-   //   if (fondo){
-      background.display();     //Displays background images
-   //   }
-     
-      net.drawNet();            //Display spider net
-     
-      
-      spiderController.checkSpiderControls();
-      
-      
-     
-      butterfliesController.displayButterflies();
-    
-      hud.display();
-       S4P.updateSprites(0.01f);
+      if(gameReady && spiderPlayerReady && kidReady){
+        background(255);
+     //   if (fondo){
+        background.display();     //Displays background images
+     //   }
+       
+        net.drawNet();            //Display spider net
+       
         
-        //SPIDER
-      spider.drawSpider();
-      spider.updateSpiderPositionInScreen();
-      
-      //TODO: cambiarlo por la posicion de la hand de la kinect
-      posHandToDraw = posHand.get();
-      posHandToDraw.x = posHandToDraw.x * X_SCALE_VALUE;
-      posHandToDraw.y = posHandToDraw.y * Y_SCALE_VALUE;
-      
-      
-      // draw the tracked hands
-      if(handPathList.size() > 0)  
-      {    
-        Iterator itr = handPathList.entrySet().iterator(); 
-        Map.Entry mapEntry = null;
-        while(itr.hasNext()){    
-          mapEntry = (Map.Entry)itr.next(); 
-        }
-        int handId =  (Integer)mapEntry.getKey();
-        ArrayList<PVector> vecList = (ArrayList<PVector>)mapEntry.getValue();
-        PVector p;
-        PVector p2d = new PVector();
+        spiderController.checkSpiderControls();
         
-        if(vecList.size()>1){
-          p2d = vecList.get(vecList.size()-1);
-        }
-        stroke(userClr[ (handId - 1) % userClr.length ]);
-        strokeWeight(4);
-        if(vecList.size()>0) {
-          p = vecList.get(0);
-          context.convertRealWorldToProjective(p,p2d);
+        
+       
+        butterfliesController.displayButterflies();
+      
+        hud.display();
+        S4P.updateSprites(0.01f);
           
-          point(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
-          hud.displayHand(new PVector(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y));//Display hud info 
+          //SPIDER
+        spider.drawSpider();
+        spider.updateSpiderPositionInScreen();
+        
+        //TODO: cambiarlo por la posicion de la hand de la kinect
+        posHandToDraw = posHand.get();
+        posHandToDraw.x = posHandToDraw.x * X_SCALE_VALUE;
+        posHandToDraw.y = posHandToDraw.y * Y_SCALE_VALUE;
+        
+        
+        // draw the tracked hands
+        if(handPathList.size() > 0)  
+        {    
+          Iterator itr = handPathList.entrySet().iterator(); 
+          Map.Entry mapEntry = null;
+          while(itr.hasNext()){    
+            mapEntry = (Map.Entry)itr.next(); 
+          }
+          int handId =  (Integer)mapEntry.getKey();
+          ArrayList<PVector> vecList = (ArrayList<PVector>)mapEntry.getValue();
+          PVector p;
+          PVector p2d = new PVector();
+          
+          if(vecList.size()>1){
+            p2d = vecList.get(vecList.size()-1);
+          }
+          stroke(userClr[ (handId - 1) % userClr.length ]);
+          strokeWeight(4);
+          if(vecList.size()>0) {
+            p = vecList.get(0);
+            context.convertRealWorldToProjective(p,p2d);
+            
+            point(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y);
+            hud.displayHand(new PVector(X_SCALE_VALUE*p2d.x,Y_SCALE_VALUE*p2d.y));//Display hud info 
+        
+            posHand = p2d;
+          }
+          //context.convertRealWorldToProjective(p,posHand);
+      }
       
-          posHand = p2d;
-        }
-        //context.convertRealWorldToProjective(p,posHand);
-    }
-    image(context.depthImage(),(displayWidth+500)/2,(displayHeight+320)/2);
-    update();
-  }else{
-    
-    println("sp: "+spiderPlayerReady+" kid: "+kidReady + " game: "+gameReady);
-    if(spiderPlayerReady && !kidReady){
-      println("Spider ready");
-      
-      PImage calibration = loadImage("images/spider_ready.png");
-      calibration.resize(width, height);
-      image(calibration, 0, 0);
-            kidReady = true;
-      //delay(2000);
+      image(context.rgbImage(),(displayWidth+1300)/2,(displayHeight+600)/2, 320, 240);
 
-      
-      
-    }else if(kidReady){
-      println("kid ready");
-      PImage calibration = loadImage("images/butterfly_ready.png");
-      calibration.resize(width, height);
-      image(calibration, 0, 0);
-      //delay(5000);
-      initGame();
+      update();
     }else{
-      PImage calibration = loadImage("images/calibration_screen.png");
-      calibration.resize(width, height);
-      image(calibration, 0, 0);
       
+      println("sp: "+spiderPlayerReady+" kid: "+kidReady + " game: "+gameReady);
+      if(spiderPlayerReady && !kidReady){
+        println("Spider ready");
+        
+        PImage calibration = loadImage("images/spider_ready.png");
+        calibration.resize(width, height);
+        image(calibration, 0, 0);
+              kidReady = true;
+        //delay(2000);
+  
+        
+        
+      }else if(kidReady){
+        println("kid ready");
+        PImage calibration = loadImage("images/butterfly_ready.png");
+        calibration.resize(width, height);
+        image(calibration, 0, 0);
+        //delay(5000);
+        initGame();
+      }else{
+        PImage calibration = loadImage("images/calibration_screen.png");
+        calibration.resize(width, height);
+        image(calibration, 0, 0);
+        
+      }
     }
-  }
+}
 }
 
 int tocado=0;
@@ -232,6 +245,7 @@ void tryToEatButterfly(){
     if(abs(dist.x)<10 && abs(dist.y)<10){
       butterfliesController.removeButterfly(n);
       hud.substractLifeBoy();
+      musicController.playSpiderEats();
     return;
     }     
   }
@@ -239,23 +253,7 @@ void tryToEatButterfly(){
 
 boolean fondo = false;
 //Mouse click control
-void mouseClicked() {
- print("info: MOUSE PRESSED\n");
- println("info: COORDINATES [" + mouseX + "," + mouseY + "]");
-  if(!spiderPlayerReady){
-    println("Activating spider");
-    spiderPlayerReady = true;
-  }else{
-    println("kid?");
-    if(!kidReady){
-      println("Activating kid");
-      kidReady = true;
-    }
-  }
-/* initGame();
- fondo = !fondo;
- */
-}
+
 
 
 void initGame(){
@@ -265,17 +263,7 @@ void initGame(){
   gameReady = true;
 }
 
-//Key control (variable key always returns the ASCI number of the pressed key, i think)
-void keyPressed() {
-  print("info: KEY PRESSED ( key = " + key + " )\n");
-  if(key == 'r') hud.resetAll();
-  if(key == 'm') hud.substractLifeSpider();
-  if(key == 'n') hud.substractLifeBoy();
-  if(key == 'a') spider.turnLeft();
-  if(key == 'd') spider.turnRight();
-  if(key == 'w') spider.goToNextPointForward();
-  if(key == 's') spider.goToNextPointBackWards(); 
-}
+
     
  
 void onNewUser(SimpleOpenNI curContext, int userId)
@@ -291,16 +279,7 @@ void onNewUser(SimpleOpenNI curContext, int userId)
        //spiderId=userId;
     }
 
-    if(spiderController.userList!= null && spiderController.userList.length==1){
-      println("Activate");
-      context.startTrackingSkeleton(userId);
-      
-  
-      kidReady = true;
-      ArrayList<PVector> vecList = new ArrayList<PVector>();
-      vecList.add(0,new PVector(0,0,0));
-      handPathList.put(userId,vecList);
-    }
+   
 
   }
   
@@ -317,6 +296,56 @@ void onVisibleUser(SimpleOpenNI curContext, int userId)
 {
   println("onVisibleUser - userId: " + userId);
 }
+ // -----------------------------------------------------------------
+ // hand events
+ 
+ void onNewHand(SimpleOpenNI curContext,int handId,PVector pos)
+ {
+   println("onNewHand - handId: " + handId + ", pos: " + pos);
+  
+   ArrayList<PVector> vecList = new ArrayList<PVector>();
+   vecList.add(pos);
+   
+   handPathList.put(handId,vecList);
+ }
+ 
+ void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
+ {
+   //println("onTrackedHand - handId: " + handId + ", pos: " + pos );
+   
+   ArrayList<PVector> vecList = handPathList.get(handId);
+   if(vecList != null)
+   {
+     vecList.add(0,pos);
+     if(vecList.size() >= HAND_VEC_LIST_SIZE)
+       // remove the last point 
+       vecList.remove(vecList.size()-1); 
+   }  
+   
+ 
+   
+   
+ }
+ 
+ void onLostHand(SimpleOpenNI curContext,int handId)
+ {
+   println("onLostHand - handId: " + handId);
+   handPathList.remove(handId);
+ }
+ 
+ // -----------------------------------------------------------------
+ // gesture events
+ 
+ void onCompletedGesture(SimpleOpenNI curContext,int gestureType, PVector pos)
+ {
+   println("onCompletedGesture - gestureType: " + gestureType + ", pos: " + pos);
+   
+   int handId = context.startTrackingHand(pos);
+   println("hand stracked: " + handId);
+   kidReady = true;
+       
+ }
+
 
 
 

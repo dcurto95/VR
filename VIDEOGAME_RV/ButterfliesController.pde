@@ -68,6 +68,7 @@ class ButterfliesController{
   }
   public void removeButterfly(int index){
     butterflies.remove(index);
+    nButterfliesInNet--;
   }
   
 }
