@@ -92,8 +92,8 @@ void setup(){
   //registerMethod("keyEvent", this);
   //kinect 640 x 480
   // pantalla width x height
-  X_SCALE_VALUE = (float)(displayWidth) / (float)(650);
-  Y_SCALE_VALUE = (float)(displayHeight) / (float)(650);
+  X_SCALE_VALUE = (float)(displayWidth) / (float)(640);
+  Y_SCALE_VALUE = (float)(displayHeight) / (float)(480);
         //hud.startTimer();
         
    nButterfliesInNet = 0;     
@@ -103,7 +103,7 @@ void setup(){
 //Draw function
 void draw(){
   //KINNECT
-    //image(context.depthImage(),0,0);
+    
     context.update();
     spiderController.userList = context.getUsers();
 
@@ -169,7 +169,7 @@ void draw(){
         }
         //context.convertRealWorldToProjective(p,posHand);
     }
-    
+    image(context.depthImage(),(displayWidth+500)/2,(displayHeight+320)/2);
     update();
   }else{
     
