@@ -160,7 +160,7 @@ public class Spider{
   }
   
   public void hideSpider(){
-  //  spiderSprite.hide();
+    spiderSprite.setVisible(false);
   }
   
   public void drawSpider(){
