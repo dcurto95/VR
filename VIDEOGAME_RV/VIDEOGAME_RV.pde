@@ -23,6 +23,7 @@ Background background;
 Spider spider;
 SpiderController spiderController;
 ButterfliesController butterfliesController;
+MusicController musicController;
 
 int compte_segons;
 int nButterfliesInNet;
@@ -96,7 +97,9 @@ void setup(){
   Y_SCALE_VALUE = (float)(displayHeight) / (float)(650);
         //hud.startTimer();
         
-   nButterfliesInNet = 0;     
+   nButterfliesInNet = 0; 
+
+  musicController = new MusicController(this);   
 }
 
 
