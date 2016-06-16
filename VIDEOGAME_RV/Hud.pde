@@ -21,7 +21,9 @@ class Hud {
 
   //Hud Image
   PImage hudImage;
-
+  PImage butWinsImg;
+  PImage spiderWinsImg;
+  
   //Constructor
   Hud( PApplet thePApplet) {
     lifesSpider = INITIAL_LIFE_SPIDER;
@@ -34,7 +36,8 @@ class Hud {
     startTime = (millis() / 1000) + COUNT_DOWN_TIME;
     
     handSprite = new Sprite(thePApplet, "images/HandSprite2.png", 1, 1, 21);
-    
+    butWinsImg = loadImage("images/butterfly_wins.png");
+    spiderWinsImg = loadImage("images/spider_wins.png");
   }
 
   //Shows HUD image + punctuation + Time left 
@@ -73,9 +76,21 @@ class Hud {
   void showGameOver() {
     seconds = 0;
     textSize(50); fill(0);
-    if (lifesBoy>lifesSpider) text("TIME OVER: BUTT WINS", W/2 -220, H/2+200);
-    else  text("TIME OVER: SPIDER WINS", W/2 -220, H/2+200);
+    if (lifesBoy>lifesSpider){
+      pushMatrix();
+      translate(width/2, height/2);
+      image(butWinsImg, 0, 0);
+      popMatrix();
+    } 
+    else{
+      pushMatrix();
+      translate(width/2, height/2);
+      image(spiderWinsImg, 0, 0);
+      popMatrix();
+    }  
     //isStopped = true;
+    gameOver = true;
+    spider.hideSpider();
   }
   
   

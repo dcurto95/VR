@@ -159,6 +159,10 @@ public class Spider{
     }
   }
   
+  public void hideSpider(){
+  //  spiderSprite.hide();
+  }
+  
   public void drawSpider(){
    if(!isMoving){
     
