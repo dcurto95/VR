@@ -88,7 +88,7 @@ class Hud {
   //Refresh and shows the timer information
   void updateTime() {  
     if (!isStopped) {
-      if (seconds < 1 || lifesSpider == 0 || lifesBoy == 0) {
+      if (seconds < 0 || seconds == 0 || lifesSpider == 0 || lifesBoy == 0) {
         showGameOver();
       }
       if (seconds > 0) {               
