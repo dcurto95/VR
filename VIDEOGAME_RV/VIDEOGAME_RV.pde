@@ -235,6 +235,7 @@ void tryToEatButterfly(){
     if(abs(dist.x)<10 && abs(dist.y)<10){
       butterfliesController.removeButterfly(n);
       hud.substractLifeBoy();
+      musicController.playSpiderEats();
     return;
     }     
   }

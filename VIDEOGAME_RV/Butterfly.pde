@@ -96,6 +96,7 @@ class Butterfly{
     isFree = true;
     nButterfliesInNet--;
     atPoint = false;
+    musicController.playFreeBut();
   }
   
   void checkEdges() {
