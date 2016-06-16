@@ -14,14 +14,16 @@ class MusicController{
     music = minim.loadFile("music1.mp3", 2048);
     music.loop();
     fxFreeButterfly = minim.loadFile("boing.mp3", 2048);
-    fxEatBut = minim.loadFile("crickets1.mp3", 2048);
+    fxEatBut = minim.loadFile("eat.mp3", 2048);
   }
   
   void playSpiderEats(){
+    fxEatBut.rewind();
     fxEatBut.play();
   }
   
   void playFreeBut(){
+    fxFreeButterfly.rewind();
     fxFreeButterfly.play();
   }
 }

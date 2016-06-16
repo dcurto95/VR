@@ -147,7 +147,7 @@ public class SpiderController{
         //if(spiderId>0 && userList[i]==spiderId){
           //Pintar esqueleto para saber lo que esta captando
           stroke(userClr);
-          drawSkeleton(userList[i]);
+          if(skeleton)drawSkeleton(userList[i]);
           int confidence = getJointPositions(i);
           
           float yDifferenceInShoulders = posLShoulder.y - posRShoulder.y;
@@ -165,23 +165,6 @@ public class SpiderController{
           
           
           
-        }else{
-          ArrayList<PVector> vecList = handPathList.get(i+1);
-          drawSkeleton(userList[i]);
-         
-          if(vecList != null)
-          {
-           
-            
-          
-            PVector pos = new PVector(0,0,0);
-            context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND,pos);
-            vecList.add(0,pos);
-            //println("log adso"+pos);
-            if(vecList.size() >= HAND_VEC_LIST_SIZE)
-              // remove the last point 
-              vecList.remove(vecList.size()-1); 
-          }  
         }
       }
     }
