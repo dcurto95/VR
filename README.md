@@ -1,29 +1,32 @@
-# README #
+# TANGLED - Kinnect Videogame #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+### Screenshots ###
 
-### What is this repository for? ###
+![Imgur](http://i.imgur.com/L4iDxYD.jpg?1 "Gesture Instructions")
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+### Gesture Instructions ###
 
-### How do I get set up? ###
+![Imgur](http://i.imgur.com/L4iDxYD.jpg?1 "Gesture Instructions")
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+### Mechanics ###
 
-### Contribution guidelines ###
+* Substract 1 point to the spider when the boy releases a butterfly 
+* Substract 1 point to the boy when the spider eats a cacoon
+* The game ends when...
+	* ...time is over
+	* ...one of the players ends up with no points/lifes
 
-* Writing tests
-* Code review
-* Other guidelines
+### Features ###
 
-### Who do I talk to? ###
+* Multiplayer: 2 simultaneous player
+* Simple, addictive and fun
+* Butterfly management algorithm
+* Dynamic spider web
 
-* Repo owner or admin
-* Other community or team contact
+### Developer team ###
+
+* Àlex Cordon
+* Janire Sarabia
+* David Curto
+* Marc Espona
+* David Gimeno
