@@ -2,7 +2,7 @@
 
 ### Screenshots ###
 
-![Imgur](http://i.imgur.com/L4iDxYD.jpg?1 "Gesture Instructions")
+![Imgur](http://i.imgur.com/mUEgz1M.jpg?1)
 
 ### Gesture Instructions ###
 
