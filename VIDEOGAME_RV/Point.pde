@@ -7,11 +7,12 @@ public class Point{
     this.position = position;
   }
   
-  public void setPointDisabled(){
+ public void setPointDisabled(){
     this.type='D';
-    println("Point disabled");
   }
+  
   public void setPointEnabled(){
     this.type='E';
   }
+  
 }

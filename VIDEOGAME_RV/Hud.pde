@@ -4,7 +4,6 @@ class Hud {
   final int COUNT_DOWN_TIME = 300;   //in seconds 
   final int INITIAL_LIFE_SPIDER = 14;      
   final int INITIAL_LIFE_KID = 10;
-  
   final int MAX_LIFES = 10; 
   final int W = width;
   final int H = height;
@@ -47,8 +46,7 @@ class Hud {
     image(hudImage, 0, 0);
     popMatrix();
     updateTime();  
-    updateScores();
-    
+    updateScores();   
   }
 
   void displayHand(PVector posHand){//displays Hand
@@ -57,6 +55,8 @@ class Hud {
       handSprite.draw();
     }
   }
+  
+  //Refresh the scores in the hud info
   void updateScores() {
     fill(255);      
     rectMode(CENTER);  
@@ -73,6 +73,7 @@ class Hud {
     seconds = COUNT_DOWN_TIME;
   }
 
+  //Prints the image gameover according
   void showGameOver() {
     seconds = 0;
     textSize(50); fill(0);
@@ -102,6 +103,7 @@ class Hud {
     println("startime: "+ System.currentTimeMillis() % 1000 + " "+ COUNT_DOWN_TIME+" "+startTime + " " +millis());
   }
 
+
   //Refresh and shows the timer information
   void updateTime() {  
     if (!isStopped) {
@@ -118,7 +120,6 @@ class Hud {
     textSize(25);
     text(nf((seconds/60 % 60), 2) + ":" + nf((seconds % 60), 2), W/2 - 35, (W/16) + 20);
   }
-  
   
   void substractLifeSpider() {
     if (lifesSpider > 0 && !isStopped) lifesSpider--;

@@ -7,8 +7,6 @@ class MusicController{
   private AudioPlayer fxFreeButterfly;
   private AudioPlayer fxEatBut;
   
-  
-  
   public MusicController(PApplet thePApplet){
     minim = new Minim(thePApplet);
     music = minim.loadFile("music1.mp3", 2048);
@@ -26,4 +24,5 @@ class MusicController{
     fxFreeButterfly.rewind();
     fxFreeButterfly.play();
   }
+  
 }

@@ -46,8 +46,7 @@ class Menu{
            .setPosition(10,10)
           // .setImages(imgs)
            .updateSize()
-           .hide()
-            ;
+           .hide();
     }
    
 }//end of Class

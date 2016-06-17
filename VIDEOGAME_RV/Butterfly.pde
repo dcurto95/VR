@@ -9,16 +9,14 @@ class Butterfly{
   float topspeed;
   PVector pointDst;
   
-  boolean show;
-  
   Sprite butterflySprite;
   Sprite cocoonSprite;
   
+  boolean show;
   boolean flagPapallona_engaged;
   boolean isFree; //Si isFree ya la has liberado y no puede re engancharse
   boolean atPoint;
   int colorIndex;
-  
   
   Butterfly(PVector pointDest, PApplet thePApplet) {
     location = new PVector(width*random(1), height+random(300));
@@ -66,8 +64,7 @@ class Butterfly{
     if(aprox.x > -0.9 && aprox.x < 0.9 && aprox.y > -0.9 && aprox.y < 0.9 && atPoint == false){
        atPoint = true;
        println("AT POINT");
-       butterflySprite.setFrameSequence(0,0,0.03f);
-       
+       butterflySprite.setFrameSequence(0,0,0.03f);   
     }
     selectButterfly(colorIndex);
   }
@@ -80,8 +77,6 @@ class Butterfly{
       cocoonSprite.setXY(location.x,location.y);
       cocoonSprite.draw();
     }
-    
-    
   }
 
   void setEngaged(){
@@ -157,4 +152,3 @@ class Butterfly{
   }
 
 }
-

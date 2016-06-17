@@ -1,13 +1,13 @@
 import SimpleOpenNI.*;
 
 public class SpiderController{
+  
   private int rotating = 0;
   public int[] userList;
   private color userClr = color(255,0,0);
   private  PVector posRHand, posLHand;
   private PVector posLShoulder,posRShoulder, posRElbow, posLElbow;
   private final float MIN_FIABILITY = 0.7;
-  
   
   public SpiderController(){
     posLHand  = new PVector();
@@ -21,12 +21,11 @@ public class SpiderController{
   
   // -----------------------------------------------------------------
   // SimpleOpenNI events
-  
-  
+  // -----------------------------------------------------------------
   
   // draw the skeleton with the selected joints
-  void drawSkeleton(int userId)
-  {
+  void drawSkeleton(int userId) {
+    
     // to get the 3d joint data
     context.drawLimb(userId, SimpleOpenNI.SKEL_HEAD, SimpleOpenNI.SKEL_NECK);
   
@@ -94,55 +93,45 @@ public class SpiderController{
     
     //Comprobar que los brazos estan abiertos (como en cruz con el cuerpo)
     if(shoulderAngleL<110 && shoulderAngleL>70 && shoulderAngleR<110 && shoulderAngleL>70){
-      //println("Arms ok");
       float elbowAngleL,elbowAngleR;
       elbowAngleL = degrees(PVector.angleBetween(posLShoulder, PVector.sub(posLHand,posLElbow)));
       elbowAngleR = degrees(PVector.angleBetween(posRShoulder, PVector.sub(posRHand,posRElbow)));
+      
       //Comprobar si manos arriba
-  
       PVector diffHands = PVector.sub(posLHand, posRHand);
       PVector diffHandShoulderL = PVector.sub(posLHand, posLShoulder);
       PVector diffHandShoulderR = PVector.sub(posRHand, posRShoulder);
-     // println("Diff hands"+diffHands+ "diffL"+ diffHandShoulderL + "diffR"+ diffHandShoulderR);
       if(abs(diffHands.y)<10 && (diffHandShoulderL.y<50 || (diffHandShoulderL.y<50))){
           spider.goToNextPointForward();
       }
+      
     }else{
- //     println("Arms angles: "+shoulderAngleL+"    "+shoulderAngleR);
+       //println("Arms angles: "+shoulderAngleL+"    "+shoulderAngleR);
     }
     
   }
   
   void checkRotation(float yDifferenceInShoulders){
-    //A partir de diferencia de alturas entre los hombros decidir si giramos o no
-       
-      //println("Shoulder diff:"+yDifferenceInShoulders);   
+      //A partir de diferencia de alturas entre los hombros decidir si giramos o no   
       if(rotating<0){  //Evita que lo compruebe en cada vuelta del draw -> sino la araña gira casi constantemente y es dificil pararla 
-        if(abs(yDifferenceInShoulders)>120){
+        if(abs(yDifferenceInShoulders) > 120){
           if(yDifferenceInShoulders>0){
-       //     println("Right");
             spider.turnRight();
           }else{
-       //     println("Left");
             spider.turnLeft();
           }
           rotating = 20;
-        }
-        
+        }   
       }
-      
   }
   
   void checkSpiderControls(){
     rotating=rotating-1;
-  //  println("El valor de rotating es " + rotating);
+  //println("El valor de rotating es " + rotating);
     if(rotating<-10) rotating = 20;
     userList = context.getUsers();
-    for(int i=0;i<userList.length;i++)
-    {
-      
-      if(context.isTrackingSkeleton(userList[i]))
-      {
+    for(int i=0;i<userList.length;i++) {
+      if(context.isTrackingSkeleton(userList[i])){
         if(i == 0){
         //if(spiderId>0 && userList[i]==spiderId){
           //Pintar esqueleto para saber lo que esta captando
@@ -161,13 +150,11 @@ public class SpiderController{
           }
           if(confidence==2){
             checkMoving();
-          }
-          
-          
-          
+          }   
         }
       }
     }
   }
+  
   
 }
